@@ -1,0 +1,22 @@
+{
+  "name": "socialmediaapp",
+  "version": "1.0.0",
+  "description": "This Is The Final Project In The js Advance Lessons To Practice all What We Learned",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZakaDev22/SocialMediaApp.git"
+  },
+  "author": "Zakaria Elfakhar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZakaDev22/SocialMediaApp/issues"
+  },
+  "homepage": "https://github.com/ZakaDev22/SocialMediaApp#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.5"
+  }
+}
