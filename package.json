@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ZakaDev22/SocialMediaApp#readme",
   "dependencies": {
     "axios": "^1.9.0",
-    "bootstrap": "^5.3.5"
+    "bootstrap": "^5.3.5",
+    "bootstrap-icons": "^1.11.3"
   }
 }

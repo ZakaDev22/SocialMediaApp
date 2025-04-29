@@ -1,0 +1,10 @@
+html , body{
+    scroll-behavior: smooth;
+    height: 100vh;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+   
+}
