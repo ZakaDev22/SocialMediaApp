@@ -1,5 +1,5 @@
 let BasURL = "https://tarmeezacademy.com/api/v1/";
-let PostsLimit = 10;
+let PostsLimit = 100;
 let PostsURL = `posts?limit=`;
 
 async function FetchingPosts() {
@@ -26,6 +26,11 @@ async function GetPosts(postLimits) {
     }
 }
 
+
+function CreateTag(tag) {
+    let tagElement = `<span class="badge bg-primary text-light m-1">${tag}</span>`;
+    return tagElement;
+}
 function GenerateNewCard(post) {
 
     let card = `
@@ -72,6 +77,7 @@ function GenerateNewCard(post) {
                 />
               </svg>
               <strong> (${post.comments_count}) Comments</strong>
+              ${post.tags.forEach((tag) => CreateTag(tag)) || ""}
             </p>
           </div>
         </div>
