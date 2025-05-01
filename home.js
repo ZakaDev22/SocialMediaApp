@@ -1,30 +1,28 @@
-
 let BasURL = "https://tarmeezacademy.com/api/v1/";
 let PostsLimit = 10;
-let PostsURL = `posts?limit=${PostsLimit}`;
+let PostsURL = `posts?limit=`;
 
 async function FetchingPosts() {
-
     let posts = await GetPosts();
-     console.log(posts);
-        if (posts.data) {
-            let postsContainer = document.getElementById("postsContainer");
-            posts.data.forEach((post) => {
-                let card = GenerateNewCard(post);
-                postsContainer.innerHTML += card;
-            });
-        } else {
-            console.error("No data received from the API.");
-        }
+    if (!posts || !posts.data) {
+        console.error("No data received from the API.");
+        return; // Exit early if no data
+    }
+    let postsContainer = document.getElementById("postsContainer");
+    posts.data.forEach((post) => {
+        let card = GenerateNewCard(post);
+        postsContainer.innerHTML += card;
+    });
 }
 
-async function GetPosts() {
+async function GetPosts(postLimits) {
+    PostsLimit = postLimits || PostsLimit;
     try {
-        let response = await axios.get(`${BasURL}${PostsURL}`);
-        return response.data;
+      let response = await axios.get(`${BasURL}${PostsURL}${PostsLimit}`);
+      return response.data;
     } catch (error) {
-        console.error("Error fetching posts:", error);
-        return null;
+      console.error("Error fetching posts:", error);
+      throw new Error("Failed to fetch posts");
     }
 }
 
@@ -32,29 +30,31 @@ function GenerateNewCard(post) {
 
     let card = `
               <div class="card col-6 mt-2 mb-1 shadow-lg">
-          <div class="card-header">
+          <div class="card-header bg-success" style="color: white">
             <img
               src="${post.author.profile_image}"
-              class="img-fluid rounded-circle border border-primary shadow"
-              width="50"
-              height="50"
+              alt = "No Image"
+              class=" rounded-circle border border-primary shadow"
+              width="70"
+              height="70"
             />
             <strong class="card-title">${
-              post.author.username || "No Title"
+              post.author.username || "No User Name"
             }</strong>
           </div>
           <div class="card-body">
             <img
               src="${post.image}"
+              alt="No Image"
               class="w-100 img-fluid rounded shadow"
             />
             <small style="color: grey" class="d-block mt-1">${
               post.created_at
             }</small>
 
-            <h5 class="mt-1">${post.titel}</h5>
+            <h5 class="mt-1">${post.title || "there is No Title Yet"}</h5>
             <p>
-             ${post.body}
+             ${post.body || "No Body Yet"}
             </p>
 
             <hr />
@@ -83,7 +83,14 @@ function GenerateNewCard(post) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    console.log(2222222);
-    FetchingPosts();
+     FetchPostsOnLoad();
 
 });
+
+async function FetchPostsOnLoad() {
+  try {
+    await FetchingPosts();
+  } catch (error) {
+    console.error("Error during initial fetch:", error);
+  }
+}
