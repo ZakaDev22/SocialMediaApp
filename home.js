@@ -1,5 +1,5 @@
 let BasURL = "https://tarmeezacademy.com/api/v1/";
-let PostsLimit = 100;
+let PostsLimit = 5; // Default limit for posts
 let PostsURL = `posts?limit=`;
 
 async function FetchingPosts() {
@@ -86,6 +86,21 @@ function GenerateNewCard(post) {
     return card;
 }
 
+document.getElementById("btnLogin").addEventListener("click", async () => {
+    let userName = document.getElementById("user-name").value;
+    let password = document.getElementById("password").value;
+    let loginData = {
+      "username": userName,
+      "password": password
+    };
+    try {
+        let response = await axios.post(`${BasURL}login`, loginData);
+        // console.log(response.data);
+        localStorage.setItem("token", response.data.token);
+    } catch (error) {
+        alert("Error during login:", error);
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
 
