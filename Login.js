@@ -28,7 +28,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     }
     
     ShowOrHideNavButtons();
-    postMessage(
+    PopUpMessage(
       "Aww yeah, you successfully Logged In To The System, Enjow Your Time",
       "LogOut",
       "alert-success"
@@ -43,9 +43,9 @@ function ShowOrHideNavButtons(){
     let token = localStorage.getItem("token") || "";
 
     if(token === ""){ 
-    loginBtn.classList.remove("visually-hidden");
-    registerBtn.classList.remove("visually-hidden");
-    logoutBtn.classList.add("visually-hidden");
+        loginBtn.classList.remove("visually-hidden");
+        registerBtn.classList.remove("visually-hidden");
+        logoutBtn.classList.add("visually-hidden");
     }
     else{
         loginBtn.classList.add("visually-hidden");
@@ -59,7 +59,7 @@ function PopUpMessage(message,LogMsg,AlertType) {
     console.error("No user data found in localStorage.");
     return;
   }
-  
+
   let userName = user.username || "No User Name";
 
   let div = document.createElement("div");
@@ -105,7 +105,3 @@ logoutBtn.addEventListener("click", () => {
   ShowOrHideNavButtons();
   PopUpMessage("Success, You Have LogOut From The System", "Log In", "alert-danger");
 });
-
-function SuccessLogoutMessage() {
-
-}
