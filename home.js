@@ -95,8 +95,17 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     };
     try {
         let response = await axios.post(`${BasURL}login`, loginData);
-        // console.log(response.data);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        let modal = document.getElementById("loginModal");
+        let modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+            modalInstance.hide();
+        } else {
+            modal = new bootstrap.Modal(modal);
+            modal.hide();
+        }
     } catch (error) {
         alert("Error during login:", error);
     }
