@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body id="body">
     <div
       class="modal fade"
       id="loginModal"
@@ -93,6 +93,7 @@
               </ul>
               <div class="d-flex w-100 justify-content-end">
                 <button
+                  id="loginbtn"
                   type="button"
                   class="btn btn-outline-success mx-2"
                   data-bs-toggle="modal"
@@ -100,8 +101,11 @@
                 >
                   Login
                 </button>
-                <button type="button" class="btn btn-outline-success">
+                <button id="btnRegister" type="button" class="btn btn-outline-success">
                   Register
+                </button>
+                <button id="btnLogout" type="button" class="btn btn-outline-danger visually-hidden">
+                  Logout
                 </button>
               </div>
             </div>
