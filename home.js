@@ -1,39 +1,39 @@
-let BasURL = "https://tarmeezacademy.com/api/v1/";
-let PostsLimit = 100;
+import { BasURL } from "./BaseURLS.js";
+
+
+let PostsLimit = 5; // Default limit for posts
 let PostsURL = `posts?limit=`;
 
 async function FetchingPosts() {
-    let posts = await GetPosts();
-    if (!posts || !posts.data) {
-        console.error("No data received from the API.");
-        return; // Exit early if no data
-    }
-    let postsContainer = document.getElementById("postsContainer");
-    posts.data.forEach((post) => {
-        let card = GenerateNewCard(post);
-        postsContainer.innerHTML += card;
-    });
+  let posts = await GetPosts();
+  if (!posts || !posts.data) {
+    console.error("No data received from the API.");
+    return; // Exit early if no data
+  }
+  let postsContainer = document.getElementById("postsContainer");
+  posts.data.forEach((post) => {
+    let card = GenerateNewCard(post);
+    postsContainer.innerHTML += card;
+  });
 }
 
 async function GetPosts(postLimits) {
-    PostsLimit = postLimits || PostsLimit;
-    try {
-      let response = await axios.get(`${BasURL}${PostsURL}${PostsLimit}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      throw new Error("Failed to fetch posts");
-    }
+  PostsLimit = postLimits || PostsLimit;
+  try {
+    let response = await axios.get(`${BasURL}${PostsURL}${PostsLimit}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw new Error("Failed to fetch posts");
+  }
 }
-
 
 function CreateTag(tag) {
-    let tagElement = `<span class="badge bg-primary text-light m-1">${tag}</span>`;
-    return tagElement;
+  let tagElement = `<span class="badge bg-primary text-light m-1">${tag}</span>`;
+  return tagElement;
 }
 function GenerateNewCard(post) {
-
-    let card = `
+  let card = `
               <div class="card col-6 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
@@ -83,14 +83,13 @@ function GenerateNewCard(post) {
         </div>
     `;
 
-    return card;
+  return card;
 }
 
 
+
 document.addEventListener("DOMContentLoaded", async () => {
-
-     FetchPostsOnLoad();
-
+  FetchPostsOnLoad();
 });
 
 async function FetchPostsOnLoad() {
