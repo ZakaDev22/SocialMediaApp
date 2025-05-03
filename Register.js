@@ -6,13 +6,19 @@ import { registerBtn } from "./BaseFunctionsAndVaraibels.js";
 // ---------------functions Related To Register Part---------------- //
   
 registerBtn.addEventListener("click", async () => {
-    let userName = document.getElementById("user-name").value;
-    let password = document.getElementById("password").value;
+
+    let userName = document.getElementById("register-user-name").value;
+    let password = document.getElementById("register-password").value;
+    let Name = document.getElementById("Personal-name").value;
     let email = document.getElementById("email").value;
+    let image = document.getElementById("image").value;
+
     let registerData = {
         username: userName,
         password: password,
+        name: Name,
         email: email,
+        image: image
     };
     try {
         let response = await axios.post(`${BasURL}register`, registerData);
