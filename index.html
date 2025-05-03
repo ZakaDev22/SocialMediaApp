@@ -40,13 +40,13 @@
                 <label for="user-name" class="col-form-label"
                   >User Name:</label
                 >
-                <input type="text" class="form-control" id="user-name" autocomplete="additional-name" />
+                <input type="text" required class="form-control" id="user-name" autocomplete="additional-name" />
               </div>
               <div class="mb-3">
                 <label for="password" class="col-form-label" 
                   >Password:</label
                 >
-                <input type="password" autocomplete="current-password"  class="form-control" id="password"></input>
+                <input type="password" required min="6" autocomplete="current-password"  class="form-control" id="password"></input>
               </div>
             </form>
           </div>
@@ -89,25 +89,25 @@
                 <label for="register-user-name" class="col-form-label"
                   >User Name:</label
                 >
-                <input type="text" class="form-control" id="register-user-name"  autocomplete="new-username" />
+                <input type="text" required class="form-control" id="register-user-name"  autocomplete="new-username" />
               </div>
               <div class="mb-3">
                 <label for="register-password" class="col-form-label" autocomplete="new-password" 
                   >Password:</label
                 >
-                <input type="password" class="form-control" id="register-password" autocomplete="new-password"></input>
+                <input type="password" required min="6" class="form-control" id="register-password" autocomplete="new-password"></input>
               </div>
               <div class="mb-3">
                 <label for="Personal-name" class="col-form-label"
                   >Personal Name:</label
                 >
-                <input type="text" class="form-control" id="Personal-name" autocomplete="additional-name"></input>
+                <input type="text" required class="form-control" id="Personal-name" autocomplete="additional-name"></input>
               </div>
                <div class="mb-3">
                 <label for="email" class="col-form-label"
                   >Email:</label
                 >
-                <input type="email" class="form-control" id="email" autocomplete="email"></input>
+                <input type="email" required class="form-control" id="email" autocomplete="email"></input>
               </div>
                <div class="mb-3">
                 <label for="image" class="col-form-label"

@@ -1,4 +1,6 @@
 import { BasURL } from "./BaseURLS.js";
+import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
+import { ShowOrHideNavButtons } from "./BaseFunctionsAndVaraibels.js";
 
 // ---------------functions Related To Register Part---------------- //
   
@@ -8,14 +10,14 @@ document.getElementById("register-btn").addEventListener("click", async () => {
   let password = document.getElementById("register-password").value;
   let Name = document.getElementById("Personal-name").value;
   let email = document.getElementById("email").value;
-  let image = document.getElementById("image").value;
+//   let image = document.getElementById("image").value;
 
   let registerData = {
     username: userName,
     password: password,
     name: Name,
-    email: email,
-    image: image,
+    email: email
+    // image: image,
   };
   try {
     let response = await axios.post(`${BasURL}register`, registerData);
@@ -38,6 +40,12 @@ document.getElementById("register-btn").addEventListener("click", async () => {
       "alert-success"
     );
   } catch (error) {
-    alert("Error during registration:", error);
+    
+    console.log(error);
+    PopUpMessage(
+      "An error occurred during registration.",
+      "LogOut",
+      "alert-danger"
+    );
   }
 });
