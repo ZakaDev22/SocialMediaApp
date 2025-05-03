@@ -46,3 +46,22 @@ export function PopUpMessage(message,LogMsg,AlertType) {
 }
 
 
+export let loginBtn = document.getElementById("loginbtn");
+export let registerBtn = document.getElementById("btnRegister");
+export let logoutBtn = document.getElementById("btnLogout");
+
+export function ShowOrHideNavButtons(){
+
+    let token = localStorage.getItem("token") || "";
+
+    if(token === ""){ 
+        loginBtn.classList.remove("visually-hidden");
+        registerBtn.classList.remove("visually-hidden");
+        logoutBtn.classList.add("visually-hidden");
+    }
+    else{
+        loginBtn.classList.add("visually-hidden");
+        registerBtn.classList.add("visually-hidden");
+        logoutBtn.classList.remove("visually-hidden");
+    }
+}

@@ -1,11 +1,15 @@
 import { BasURL } from "./BaseURLS.js";
-import { PopUpMessage } from "./BaseFunctions.js";
+import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
+
+import { loginBtn } from "./BaseFunctionsAndVaraibels.js";
+import { registerBtn } from "./BaseFunctionsAndVaraibels.js";
+import { logoutBtn } from "./BaseFunctionsAndVaraibels.js";
+
+import {ShowOrHideNavButtons} from "./BaseFunctionsAndVaraibels.js";
 
 
 // functions Related To Loging Part //
-let loginBtn = document.getElementById("loginbtn");
-let registerBtn = document.getElementById("btnRegister");
-let logoutBtn = document.getElementById("btnLogout");
+
 
 ShowOrHideNavButtons();
 
@@ -41,21 +45,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   }
 });
 
-function ShowOrHideNavButtons(){
 
-    let token = localStorage.getItem("token") || "";
-
-    if(token === ""){ 
-        loginBtn.classList.remove("visually-hidden");
-        registerBtn.classList.remove("visually-hidden");
-        logoutBtn.classList.add("visually-hidden");
-    }
-    else{
-        loginBtn.classList.add("visually-hidden");
-        registerBtn.classList.add("visually-hidden");
-        logoutBtn.classList.remove("visually-hidden");
-    }
-}
 
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
