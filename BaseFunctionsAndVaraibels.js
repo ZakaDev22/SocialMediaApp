@@ -83,3 +83,16 @@ export function ShowUserProfileInNavBar(){
 export function HideUserProfileInNavBar(){
     document.getElementById("nav-profile").classList.add("visually-hidden");
 }
+
+export function SHowOrHideAddPostBtn(){
+
+    let token = localStorage.getItem("token") || "";
+    let addPostBtn = document.getElementById("btnAddPost");
+
+    if(token === ""){
+        addPostBtn.classList.add("visually-hidden");
+    }
+    else{
+        addPostBtn.classList.remove("visually-hidden");
+    }
+}

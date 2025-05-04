@@ -4,9 +4,11 @@ import { logoutBtn } from "./BaseFunctionsAndVaraibels.js";
 import {ShowOrHideNavButtons} from "./BaseFunctionsAndVaraibels.js";
 import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
 import { HideUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
+import { SHowOrHideAddPostBtn } from "./BaseFunctionsAndVaraibels.js";
 
 
-ShowOrHideNavButtons();
+ShowOrHideNavButtons(); // call the function to show or hide the nav buttons based on the token
+SHowOrHideAddPostBtn(); // call the function to show or hide the add post button based on the token
 
 document.getElementById("btnLogin").addEventListener("click", async () => {
   let userName = document.getElementById("user-name").value;
@@ -31,6 +33,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     
     ShowOrHideNavButtons();
     ShowUserProfileInNavBar();
+    SHowOrHideAddPostBtn();
     PopUpMessage(
       "Aww yeah, you successfully Logged In To The System, Enjow Your Time",
       "LogOut",
@@ -48,6 +51,7 @@ logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("user");
   ShowOrHideNavButtons();
     HideUserProfileInNavBar();
+    SHowOrHideAddPostBtn();
   PopUpMessage("Success, You Have LogOut From The System", "Log In", "alert-danger");
 });
 
