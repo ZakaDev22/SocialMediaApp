@@ -1,29 +1,42 @@
 import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
 import { ShowOrHideNavButtons } from "./BaseFunctionsAndVaraibels.js";
+import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
+import { HideUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
+import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVaraibels.js";
 
 // ---------------functions Related To Register Part---------------- //
-  
-document.getElementById("register-btn").addEventListener("click", async () => {
 
+document.getElementById("register-btn").addEventListener("click", async () => {
   let userName = document.getElementById("register-user-name").value;
   let password = document.getElementById("register-password").value;
   let Name = document.getElementById("Personal-name").value;
   let email = document.getElementById("email").value;
-//   let image = document.getElementById("image").value;
+  let image = document.getElementById("image").files[0]; // Get the selected file
 
-  let registerData = {
-    username: userName,
-    password: password,
-    name: Name,
-    email: email
-    // image: image,
-  };
+  // Create a FormData object
+  let formData = new FormData();
+  formData.append("username", userName);
+  formData.append("password", password);
+  formData.append("name", Name);
+  formData.append("email", email);
+  if (image) {
+    formData.append("image", image); // Append the file only if it exists
+  }
+
   try {
-    let response = await axios.post(`${BasURL}register`, registerData);
+    // Send the FormData object to the API
+    let response = await axios.post(`${BasURL}register`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Set the correct header
+      },
+    });
+
+    // Save the token and user data in localStorage
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.user));
 
+    // Hide the modal
     let modal = document.getElementById("RegisterModal");
     let modalInstance = bootstrap.Modal.getInstance(modal);
     if (modalInstance) {
@@ -33,19 +46,15 @@ document.getElementById("register-btn").addEventListener("click", async () => {
       modal.hide();
     }
 
+    // Show success message
+    PopUpMessage("Registration successful!", "success");
     ShowOrHideNavButtons();
-    PopUpMessage(
-      "Aww yeah, you successfully Registered In To The System, Enjow Your Time",
-      "LogOut",
-      "alert-success"
-    );
+    ShowUserProfileInNavBar();
+    ShowOrHideAddPostBtn();
   } catch (error) {
-    
-    console.log(error);
-    PopUpMessage(
-      "An error occurred during registration.",
-      "LogOut",
-      "alert-danger"
-    );
+    console.error("Error during registration:", error);
+    PopUpMessage("Registration failed. Please try again.", "danger");
+    HideUserProfileInNavBar();
+    ShowOrHideAddPostBtn();
   }
 });

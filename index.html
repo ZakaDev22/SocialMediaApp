@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <!-- login modal -->
+    <!-- add post modal -->
     <div
       class="modal fade"
       id="addPostModal"
@@ -143,7 +143,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Post</h1>
             <button
               type="button"
               class="btn-close"
@@ -154,16 +154,22 @@
           <div class="modal-body">
             <form>
               <div class="mb-3">
-                <label for="user-name" class="col-form-label"
-                  >User Name:</label
+                <label for="post-title" class="col-form-label"
+                  >Title:</label
                 >
-                <input type="text" required class="form-control" id="user-name" autocomplete="additional-name" />
+                <input type="text" required class="form-control" id="post-title" />
               </div>
               <div class="mb-3">
-                <label for="password" class="col-form-label" 
-                  >Password:</label
+                <label for="post-body" class="col-form-label" 
+                  >Body:</label
                 >
-                <input type="password" required min="6" autocomplete="current-password"  class="form-control" id="password"></input>
+                <input type="text" required    class="form-control" id="post-body"></input>
+              </div>
+               <div class="mb-3">
+                <label for="post-img" class="col-form-label" 
+                  >post image:</label
+                >
+                <input type="file" required    class="form-control" id="post-img"></input>
               </div>
             </form>
           </div>
@@ -175,7 +181,7 @@
             >
               Close
             </button>
-            <button id="btnLogin" type="button" class="btn btn-primary">Login</button>
+            <button id="btnLogin" type="button" class="btn btn-primary">Save</button>
           </div>
         </div>
       </div>
@@ -225,7 +231,7 @@
               <div id="nav-btn" class="d-flex w-100 justify-content-end">
                 <div id="nav-profile" class="align-content-center p-1 mx-2 visually-hidden">
                   <img id="profile-image" src="" alt="Profile Image" title="Profile Image" class="rounded-circle" width="40" height="40" />
-                  <span id="profile-name"></span>
+                  <strong id="profile-name"></strong>
                 </div>
                 <button
                   id="loginbtn"

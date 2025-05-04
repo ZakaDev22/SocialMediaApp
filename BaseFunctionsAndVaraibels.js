@@ -84,7 +84,7 @@ export function HideUserProfileInNavBar(){
     document.getElementById("nav-profile").classList.add("visually-hidden");
 }
 
-export function SHowOrHideAddPostBtn(){
+export function ShowOrHideAddPostBtn(){
 
     let token = localStorage.getItem("token") || "";
     let addPostBtn = document.getElementById("btnAddPost");
