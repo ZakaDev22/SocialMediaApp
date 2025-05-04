@@ -65,3 +65,21 @@ export function ShowOrHideNavButtons(){
         logoutBtn.classList.remove("visually-hidden");
     }
 }
+
+export function ShowUserProfileInNavBar(){
+    let user = JSON.parse(localStorage.getItem("user")) || {};
+    let userName = user.username || "No User Name";
+    let userImage = user.profile_image || "No Image";
+
+    let profileImg = document.getElementById("profile-image");
+    let profileName = document.getElementById("profile-name");
+
+    profileImg.src = userImage == "No Image" ? "https://via.placeholder.com/150" : userImage;
+    profileName.innerText = userName;
+
+    document.getElementById("nav-profile").classList.remove("visually-hidden");
+}
+
+export function HideUserProfileInNavBar(){
+    document.getElementById("nav-profile").classList.add("visually-hidden");
+}

@@ -1,10 +1,9 @@
 import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
-
 import { logoutBtn } from "./BaseFunctionsAndVaraibels.js";
-
 import {ShowOrHideNavButtons} from "./BaseFunctionsAndVaraibels.js";
-
+import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
+import { HideUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
 
 
 ShowOrHideNavButtons();
@@ -31,6 +30,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     }
     
     ShowOrHideNavButtons();
+    ShowUserProfileInNavBar();
     PopUpMessage(
       "Aww yeah, you successfully Logged In To The System, Enjow Your Time",
       "LogOut",
@@ -47,6 +47,7 @@ logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   ShowOrHideNavButtons();
+    HideUserProfileInNavBar();
   PopUpMessage("Success, You Have LogOut From The System", "Log In", "alert-danger");
 });
 
