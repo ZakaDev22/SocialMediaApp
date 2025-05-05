@@ -1,14 +1,13 @@
 import { BasURL } from "./BaseURLS.js";
-import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
-import { logoutBtn } from "./BaseFunctionsAndVaraibels.js";
-import {ShowOrHideNavButtons} from "./BaseFunctionsAndVaraibels.js";
-import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
-import { HideUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
-import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVaraibels.js";
+import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
+import { logoutBtn } from "./BaseFunctionsAndVariables.js";
+import {ShowOrHideNavButtons} from "./BaseFunctionsAndVariables.js";
+import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
+import { HideUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
+import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVariables.js";
 
 
 ShowOrHideNavButtons(); // call the function to show or hide the nav buttons based on the token
-ShowUserProfileInNavBar(); // call the function to show the user profile in the nav bar based on the token
 ShowOrHideAddPostBtn(); // call the function to show or hide the add post button based on the token
 
 

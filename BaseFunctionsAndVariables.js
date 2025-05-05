@@ -58,11 +58,13 @@ export function ShowOrHideNavButtons(){
         loginBtn.classList.remove("visually-hidden");
         registerBtn.classList.remove("visually-hidden");
         logoutBtn.classList.add("visually-hidden");
+        HideUserProfileInNavBar();
     }
     else{
         loginBtn.classList.add("visually-hidden");
         registerBtn.classList.add("visually-hidden");
         logoutBtn.classList.remove("visually-hidden");
+        ShowUserProfileInNavBar();
     }
 }
 
@@ -77,11 +79,11 @@ export function ShowUserProfileInNavBar(){
     profileImg.src = userImage == "No Image" ? "https://via.placeholder.com/150" : userImage;
     profileName.innerText = userName;
 
-    document.getElementById("nav-profile").classList.remove("visually-hidden");
+    document.getElementById("nav-profile").classList.remove("d-none");
 }
 
 export function HideUserProfileInNavBar(){
-    document.getElementById("nav-profile").classList.add("visually-hidden");
+    document.getElementById("nav-profile").classList.add("d-none");
 }
 
 export function ShowOrHideAddPostBtn(){

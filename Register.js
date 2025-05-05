@@ -1,9 +1,9 @@
 import { BasURL } from "./BaseURLS.js";
-import { PopUpMessage } from "./BaseFunctionsAndVaraibels.js";
-import { ShowOrHideNavButtons } from "./BaseFunctionsAndVaraibels.js";
-import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
-import { HideUserProfileInNavBar } from "./BaseFunctionsAndVaraibels.js";
-import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVaraibels.js";
+import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
+import { ShowOrHideNavButtons } from "./BaseFunctionsAndVariables.js";
+import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
+import { HideUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
+import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVariables.js";
 
 // ---------------functions Related To Register Part---------------- //
 
