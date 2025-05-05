@@ -1,5 +1,5 @@
 
-export function PopUpMessage(message,LogMsg,AlertType) {
+export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
   let user = JSON.parse(localStorage.getItem("user")) || {};
   if (!user) {
     console.error("No user data found in localStorage.");

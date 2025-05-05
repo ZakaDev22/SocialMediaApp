@@ -15,18 +15,30 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     }
     
     try {
-        // Send the FormData object to the API
-        let response = await axios.post(`${BasURL}posts`, formData, {
+      // Send the FormData object to the API
+      let response = await axios.post(`${BasURL}posts`, formData, {
         headers: {
-            "Content-Type": "multipart/form-data", 
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        });
-    
-        PopUpMessage("Post created successfully!", "success");
-        console.log(response.data); // Log the response data for debugging
+      });
+
+      // Hide the modal
+      let modal = document.getElementById("addPostModal");
+      let modalInstance = bootstrap.Modal.getInstance(modal);
+      if (modalInstance) {
+        modalInstance.hide();
+      } else {
+        modal = new bootstrap.Modal(modal);
+        modal.hide();
+      }
+
+      PopUpMessage("Post created successfully!, the page will be reloaded after 3 seconds", "success");
+        setTimeout(() => {
+            window.location.reload(); // Reload the page after 3 seconds
+        }, 3000); // 3000 milliseconds = 3 seconds
     } catch (error) {
         console.error("Error creating post:", error);
-        PopUpMessage("Failed to create post. Please try again.", "danger");
+        PopUpMessage("Failed to create post. Please try again." ,"danger");
     }
 });
