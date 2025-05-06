@@ -41,7 +41,8 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
       "alert-success"
     );
   } catch (error) {
-    alert("Error during login:", error);
+    console.log(error);
+    PopUpMessage("Error during login: see the full message on the cosole","","alert-danger");
   }
 });
 

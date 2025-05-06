@@ -33,10 +33,11 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
         modal.hide();
       }
 
-      PopUpMessage("Post created successfully!, the page will be reloaded after 3 seconds", "success");
-        setTimeout(() => {
-            window.location.reload(); // Reload the page after 3 seconds
-        }, 3000); // 3000 milliseconds = 3 seconds
+      PopUpMessage("Post created successfully!", "success");
+    
+      setTimeout(async () => {
+        window.location.reload(); // Reload the page to see the new post
+      }, 3500); 
     } catch (error) {
         console.error("Error creating post:", error);
         PopUpMessage("Failed to create post. Please try again." ,"danger");

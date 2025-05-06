@@ -11,7 +11,7 @@ export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
   let div = document.createElement("div");
   div.innerHTML = `
            <div class="alert ${AlertType} d-flex flex-column justify-content-center align-items-center" role="alert">
-              <h4 class="alert-heading">Well done ${userName}</h4>
+              <h4 class="alert-heading">hello ${userName}</h4>
               <p>${message}</p>
                <hr>
                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
@@ -34,7 +34,7 @@ export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
     "animate__animated",
     "animate__fadeIn"
   );
-  div.style.zIndex = 2;
+  div.style.zIndex = 1056; // Bootstrap modal z-index is 1055, so we use a higher value
   document.body.appendChild(div);
 
   setTimeout(() => {
