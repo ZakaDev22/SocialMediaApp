@@ -1,5 +1,5 @@
 
-export function PopUpMessage(message,LogMsg,AlertType) {
+export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
   let user = JSON.parse(localStorage.getItem("user")) || {};
   if (!user) {
     console.error("No user data found in localStorage.");
@@ -11,7 +11,7 @@ export function PopUpMessage(message,LogMsg,AlertType) {
   let div = document.createElement("div");
   div.innerHTML = `
            <div class="alert ${AlertType} d-flex flex-column justify-content-center align-items-center" role="alert">
-              <h4 class="alert-heading">Well done ${userName}</h4>
+              <h4 class="alert-heading">hello ${userName}</h4>
               <p>${message}</p>
                <hr>
                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
@@ -34,7 +34,7 @@ export function PopUpMessage(message,LogMsg,AlertType) {
     "animate__animated",
     "animate__fadeIn"
   );
-  div.style.zIndex = 2;
+  div.style.zIndex = 1056; // Bootstrap modal z-index is 1055, so we use a higher value
   document.body.appendChild(div);
 
   setTimeout(() => {
@@ -58,11 +58,13 @@ export function ShowOrHideNavButtons(){
         loginBtn.classList.remove("visually-hidden");
         registerBtn.classList.remove("visually-hidden");
         logoutBtn.classList.add("visually-hidden");
+        HideUserProfileInNavBar();
     }
     else{
         loginBtn.classList.add("visually-hidden");
         registerBtn.classList.add("visually-hidden");
         logoutBtn.classList.remove("visually-hidden");
+        ShowUserProfileInNavBar();
     }
 }
 
@@ -77,9 +79,22 @@ export function ShowUserProfileInNavBar(){
     profileImg.src = userImage == "No Image" ? "https://via.placeholder.com/150" : userImage;
     profileName.innerText = userName;
 
-    document.getElementById("nav-profile").classList.remove("visually-hidden");
+    document.getElementById("nav-profile").classList.remove("d-none");
 }
 
 export function HideUserProfileInNavBar(){
-    document.getElementById("nav-profile").classList.add("visually-hidden");
+    document.getElementById("nav-profile").classList.add("d-none");
+}
+
+export function ShowOrHideAddPostBtn(){
+
+    let token = localStorage.getItem("token") || "";
+    let addPostBtn = document.getElementById("btnAddPost");
+
+    if(token === ""){
+        addPostBtn.classList.add("visually-hidden");
+    }
+    else{
+        addPostBtn.classList.remove("visually-hidden");
+    }
 }
