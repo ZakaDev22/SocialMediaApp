@@ -1,10 +1,6 @@
 import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 
-
-let PostsLimit = 5; // Default limit for posts
-let PostsURL = `posts?limit=`;
-
 async function FetchingPosts() {
   let posts = await GetPosts();
   if (!posts || !posts.data) {
@@ -12,16 +8,16 @@ async function FetchingPosts() {
     return; // Exit early if no data
   }
   let postsContainer = document.getElementById("postsContainer");
+  postsContainer.innerHTML = ""; // Clear previous posts
   posts.data.forEach((post) => {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
   });
 }
 
-async function GetPosts(postLimits) {
-  PostsLimit = postLimits || PostsLimit;
+async function GetPosts(postLimits=5,currentPage=1) {
   try {
-    let response = await axios.get(`${BasURL}${PostsURL}${PostsLimit}`);
+    let response = await axios.get(`${BasURL}posts?limit=${postLimits}&page=${currentPage}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -102,7 +98,7 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     
     try {
       // Send the FormData object to the API
-      let response = await axios.post(`${BasURL}posts`, formData, {
+        await axios.post(`${BasURL}posts`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -122,8 +118,9 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
       PopUpMessage("Post created successfully!", "success");
     
       setTimeout(async () => {
-        window.location.reload(); // Reload the page to see the new post
+                await FetchingPosts();
       }, 3500); 
+
     } catch (error) {
         console.error("Error creating post:", error);
         PopUpMessage("Failed to create post. Please try again." ,"danger");
