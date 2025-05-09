@@ -1,6 +1,10 @@
 import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 
+let currentPage = 1;
+let postLimits = 5;
+let isFetching = false;
+
 async function FetchingPosts() {
   let posts = await GetPosts();
   if (!posts || !posts.data) {
@@ -15,7 +19,7 @@ async function FetchingPosts() {
   });
 }
 
-async function GetPosts(postLimits=5,currentPage=1) {
+async function GetPosts() {
   try {
     let response = await axios.get(`${BasURL}posts?limit=${postLimits}&page=${currentPage}`);
     return response.data;
@@ -81,6 +85,34 @@ function GenerateNewCard(post) {
     `;
 
   return card;
+}
+
+window.addEventListener("scroll", async () => {
+  let scrollTop = window.scrollY;
+  let windowHeight = window.innerHeight;
+  let documentHeight = document.documentElement.scrollHeight;
+
+  if (scrollTop + windowHeight >= documentHeight - 100 && !isFetching) {
+    isFetching = true; // Prevent multiple triggers
+    currentPage++;
+    await FetchingPaginationPosts(postLimits, currentPage);
+    isFetching = false; // Reset the flag
+  }
+});
+
+async function FetchingPaginationPosts(limit, page) {
+
+  let posts = await GetPosts(limit, page);
+  if (!posts || !posts.data) {
+    console.error("No data received from the API.");
+    return; 
+  }
+
+  let postsContainer = document.getElementById("postsContainer");
+  posts.data.forEach((post) => {
+    let card = GenerateNewCard(post);
+    postsContainer.innerHTML += card;
+  });
 }
 
 document.getElementById("btnSavePost").addEventListener("click", async () => {
