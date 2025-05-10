@@ -21,15 +21,6 @@ async function FetchingPosts() {
     postsContainer.innerHTML += card;
   });
 
-  // Add event listener to the postsContainer for event delegation
-  postsContainer.addEventListener("click", function(event) {
-    // Find the closest card element to the clicked target
-    let card = event.target.closest('.card');
-    if (card) {
-      let postId = card.id;
-      openPostDetails(postId);
-    }
-  });
 }
 
 async function GetPosts() {
@@ -54,9 +45,20 @@ function CreateTag(tag) {
   let tagElement = `<span class="badge bg-primary text-light m-1">${tag}</span>`;
   return tagElement;
 }
+
 function GenerateNewCard(post) {
-  let authorImage = post.author?.profile_image ?? "./images/MaleImage.png";
+  let authorImage = "./images/MaleImage.png"; // Default image
+  if (post.author && post.author.profile_image && typeof post.author.profile_image === 'string' && post.author.profile_image.trim() !== "") {
+    authorImage = post.author.profile_image;
+  }
+
   let authorUsername = post.author?.username ?? "No User Name";
+
+  let postImage = "./images/walpaper.jpg"; // Default image
+  if (post.image && typeof post.image === 'string' && post.image.trim() !== "") {
+    postImage = post.image;
+  }
+
   let PostTags = post.tags || [];
 
   let card = `
@@ -73,7 +75,7 @@ function GenerateNewCard(post) {
           </div>
           <div class="card-body">
             <img
-              src="${post.image}"
+              src="${postImage}"
               alt="No Image"
               class="w-100 img-fluid rounded shadow"
             />
@@ -193,8 +195,10 @@ async function openPostDetails(postId) {
   // Fetch post details
    try{
     let response = await axios.get(`${BasURL}posts/${postId}`);
-    let post = response.data;
+    
+    let post = response.data.data;
 
+    console.log(post);
     let postCard = GenerateNewCard(post);
 
     let postDetailsContainer = document.getElementById("postDetailsContainer");
@@ -203,13 +207,7 @@ async function openPostDetails(postId) {
     // Fetch and display comments
     let commentsContainer = document.getElementById("commentsContainer");
     commentsContainer.innerHTML = "";
-    // post.comments.forEach((comment) => {
-    //   commentsContainer.innerHTML += `
-    //     <div class="mb-2">
-    //       <strong>${comment.author.username}</strong>: ${comment.body}
-    //     </div>
-    //   `;
-    // });
+
 
     // Show the modal
     let modal = new bootstrap.Modal(
@@ -258,6 +256,18 @@ async function openPostDetails(postId) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
+
+  // Add event listener to the postsContainer for event delegation
+  postsContainer.addEventListener("click", function (event) {
+    // Find the closest card element to the clicked target
+    let card = event.target.closest(".card");
+    if (card) {
+      // console.log("Card clicked:", card);
+      let postId = card.id;
+      // console.log("Post ID:", postId);
+      openPostDetails(postId);
+    }
+  });
 });
 
 async function FetchPostsOnLoad() {
