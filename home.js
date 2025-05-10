@@ -1,5 +1,7 @@
 import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
+import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
 let postLimits = 10;
@@ -22,6 +24,7 @@ async function FetchingPosts() {
 
 async function GetPosts() {
   try {
+    ShowLoadingBar();
     let response = await axios.get(`${BasURL}posts?limit=${postLimits}&page=${currentPage}`);
     if (response.status !== 200) {
       throw new Error("Failed to fetch posts");
@@ -31,6 +34,9 @@ async function GetPosts() {
   } catch (error) {
     console.error("Error fetching posts:", error);
     throw new Error("Failed to fetch posts");
+  }
+  finally{
+    HideLoadingBar();
   }
 }
 
@@ -134,6 +140,8 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     }
     
     try {
+
+      ShowLoadingBar();
       // Send the FormData object to the API
         await axios.post(`${BasURL}posts`, formData, {
         headers: {
@@ -161,6 +169,9 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     } catch (error) {
         console.error("Error creating post:", error);
         PopUpMessage("Failed to create post. Please try again." ,"danger");
+    }
+    finally{
+      HideLoadingBar();
     }
 });
 

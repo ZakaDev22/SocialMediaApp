@@ -5,6 +5,8 @@ import {ShowOrHideNavButtons} from "./BaseFunctionsAndVariables.js";
 import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
 import { HideUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
 import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVariables.js";
+import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
 
 
 ShowOrHideNavButtons(); // call the function to show or hide the nav buttons based on the token
@@ -19,6 +21,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     password: password,
   };
   try {
+    ShowLoadingBar();
     let response = await axios.post(`${BasURL}login`, loginData);
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -43,6 +46,9 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   } catch (error) {
     console.log(error);
     PopUpMessage("Error during login: see the full message on the cosole","","alert-danger");
+  }
+  finally {
+    HideLoadingBar();
   }
 });
 

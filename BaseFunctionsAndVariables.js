@@ -1,4 +1,3 @@
-
 export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
   let user = JSON.parse(localStorage.getItem("user")) || {};
   if (!user) {
@@ -97,4 +96,31 @@ export function ShowOrHideAddPostBtn(){
     else{
         addPostBtn.classList.remove("visually-hidden");
     }
+}
+
+export function ShowLoadingBar() {
+  let loadingBar = document.createElement("div");
+  loadingBar.id = "loading-bar";
+  loadingBar.innerHTML = `
+    <div
+      class="position-fixed top-50 start-50 translate-middle d-flex justify-content-center align-items-center"
+      style="z-index: 1056; width: 100px; height: 100px;"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 80px; height: 80px; border-width: 8px;"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(loadingBar);
+}
+
+export function HideLoadingBar() {
+  let loadingBar = document.getElementById("loading-bar");
+  if (loadingBar) {
+    document.body.removeChild(loadingBar);
+  }
 }
