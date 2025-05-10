@@ -2,7 +2,8 @@ import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
-let postLimits = 5;
+let postLimits = 10;
+let lastPage = 0;
 let isFetching = false;
 
 async function FetchingPosts() {
@@ -22,6 +23,10 @@ async function FetchingPosts() {
 async function GetPosts() {
   try {
     let response = await axios.get(`${BasURL}posts?limit=${postLimits}&page=${currentPage}`);
+    if (response.status !== 200) {
+      throw new Error("Failed to fetch posts");
+    }
+    lastPage = response.data.meta.last_page; // Get the last page number
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -92,7 +97,7 @@ window.addEventListener("scroll", async () => {
   let windowHeight = window.innerHeight;
   let documentHeight = document.documentElement.scrollHeight;
 
-  if (scrollTop + windowHeight >= documentHeight - 100 && !isFetching) {
+  if (scrollTop + windowHeight >= documentHeight - 100 && !isFetching && currentPage < lastPage) {
     isFetching = true; // Prevent multiple triggers
     currentPage++;
     await FetchingPaginationPosts(postLimits, currentPage);
