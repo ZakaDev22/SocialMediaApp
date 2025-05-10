@@ -20,6 +20,16 @@ async function FetchingPosts() {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
   });
+
+  // Add event listener to the postsContainer for event delegation
+  postsContainer.addEventListener("click", function(event) {
+    // Find the closest card element to the clicked target
+    let card = event.target.closest('.card');
+    if (card) {
+      let postId = card.id;
+      openPostDetails(postId);
+    }
+  });
 }
 
 async function GetPosts() {
@@ -45,19 +55,21 @@ function CreateTag(tag) {
   return tagElement;
 }
 function GenerateNewCard(post) {
+  let authorImage = post.author?.profile_image ?? "./images/MaleImage.png";
+  let authorUsername = post.author?.username ?? "No User Name";
+  let PostTags = post.tags || [];
+
   let card = `
-              <div class="card col-6 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-6 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
-              src="${post.author.profile_image}"
+              src="${authorImage}"
               alt = "No Image"
               class=" rounded-circle border border-primary shadow"
               width="70"
               height="70"
             />
-            <strong class="card-title">${
-              post.author.username || "No User Name"
-            }</strong>
+            <strong class="card-title">${authorUsername}</strong>
           </div>
           <div class="card-body">
             <img
@@ -89,7 +101,7 @@ function GenerateNewCard(post) {
                 />
               </svg>
               <strong> (${post.comments_count}) Comments</strong>
-              ${post.tags.forEach((tag) => CreateTag(tag)) || ""}
+              ${PostTags.forEach((tag) => CreateTag(tag)) || ""}
             </p>
           </div>
         </div>
@@ -175,6 +187,74 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     }
 });
 
+// ====== Post details Funcs =========
+
+async function openPostDetails(postId) {
+  // Fetch post details
+   try{
+    let response = await axios.get(`${BasURL}posts/${postId}`);
+    let post = response.data;
+
+    let postCard = GenerateNewCard(post);
+
+    let postDetailsContainer = document.getElementById("postDetailsContainer");
+    postDetailsContainer.innerHTML = postCard;
+
+    // Fetch and display comments
+    let commentsContainer = document.getElementById("commentsContainer");
+    commentsContainer.innerHTML = "";
+    // post.comments.forEach((comment) => {
+    //   commentsContainer.innerHTML += `
+    //     <div class="mb-2">
+    //       <strong>${comment.author.username}</strong>: ${comment.body}
+    //     </div>
+    //   `;
+    // });
+
+    // Show the modal
+    let modal = new bootstrap.Modal(
+      document.getElementById("postDetailsModal")
+    );
+    modal.show();
+
+    // Add event listener for adding a comment
+    document.getElementById("btnAddComment").onclick = async () => {
+      let commentText = document.getElementById("commentText").value;
+      if (commentText.trim() === "") {
+        alert("Comment cannot be empty!");
+        return;
+      }
+
+      try {
+        await axios.post(
+          `${BasURL}posts/${postId}/comments`,
+          { body: commentText },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        // Refresh comments
+        commentsContainer.innerHTML += `
+          <div class="mb-2">
+            <strong>You</strong>: ${commentText}
+          </div>
+        `;
+        document.getElementById("commentText").value = ""; // Clear the textarea
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        alert("Failed to add comment. Please try again.");
+      }
+    };
+   }
+   catch(error){
+    console.error("Error fetching post details:", error);
+  }
+}
+
+// ============ end ================//
 
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
