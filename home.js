@@ -1,8 +1,12 @@
 import { BasURL } from "./BaseURLS.js";
+import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
+import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
 
-
-let PostsLimit = 5; // Default limit for posts
-let PostsURL = `posts?limit=`;
+let currentPage = 1;
+let postLimits = 10;
+let lastPage = 0;
+let isFetching = false;
 
 async function FetchingPosts() {
   let posts = await GetPosts();
@@ -11,20 +15,28 @@ async function FetchingPosts() {
     return; // Exit early if no data
   }
   let postsContainer = document.getElementById("postsContainer");
+  postsContainer.innerHTML = ""; // Clear previous posts
   posts.data.forEach((post) => {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
   });
 }
 
-async function GetPosts(postLimits) {
-  PostsLimit = postLimits || PostsLimit;
+async function GetPosts() {
   try {
-    let response = await axios.get(`${BasURL}${PostsURL}${PostsLimit}`);
+    ShowLoadingBar();
+    let response = await axios.get(`${BasURL}posts?limit=${postLimits}&page=${currentPage}`);
+    if (response.status !== 200) {
+      throw new Error("Failed to fetch posts");
+    }
+    lastPage = response.data.meta.last_page; // Get the last page number
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
     throw new Error("Failed to fetch posts");
+  }
+  finally{
+    HideLoadingBar();
   }
 }
 
@@ -86,6 +98,82 @@ function GenerateNewCard(post) {
   return card;
 }
 
+window.addEventListener("scroll", async () => {
+  let scrollTop = window.scrollY;
+  let windowHeight = window.innerHeight;
+  let documentHeight = document.documentElement.scrollHeight;
+
+  if (scrollTop + windowHeight >= documentHeight - 100 && !isFetching && currentPage < lastPage) {
+    isFetching = true; // Prevent multiple triggers
+    currentPage++;
+    await FetchingPaginationPosts(postLimits, currentPage);
+    isFetching = false; // Reset the flag
+  }
+});
+
+async function FetchingPaginationPosts(limit, page) {
+
+  let posts = await GetPosts(limit, page);
+  if (!posts || !posts.data) {
+    console.error("No data received from the API.");
+    return; 
+  }
+
+  let postsContainer = document.getElementById("postsContainer");
+  posts.data.forEach((post) => {
+    let card = GenerateNewCard(post);
+    postsContainer.innerHTML += card;
+  });
+}
+
+document.getElementById("btnSavePost").addEventListener("click", async () => {
+    let title = document.getElementById("post-title").value;
+    let content = document.getElementById("post-body").value;
+    let image = document.getElementById("post-img").files[0]; // Get the selected file
+    
+    // Create a FormData object
+    let formData = new FormData();
+    formData.append("title", title);
+    formData.append("body", content);
+    if (image) {
+        formData.append("image", image); // Append the file only if it exists
+    }
+    
+    try {
+
+      ShowLoadingBar();
+      // Send the FormData object to the API
+        await axios.post(`${BasURL}posts`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // Hide the modal
+      let modal = document.getElementById("addPostModal");
+      let modalInstance = bootstrap.Modal.getInstance(modal);
+      if (modalInstance) {
+        modalInstance.hide();
+      } else {
+        modal = new bootstrap.Modal(modal);
+        modal.hide();
+      }
+
+      PopUpMessage("Post created successfully!", "success");
+    
+      setTimeout(async () => {
+                await FetchingPosts();
+      }, 3500); 
+
+    } catch (error) {
+        console.error("Error creating post:", error);
+        PopUpMessage("Failed to create post. Please try again." ,"danger");
+    }
+    finally{
+      HideLoadingBar();
+    }
+});
 
 
 document.addEventListener("DOMContentLoaded", async () => {

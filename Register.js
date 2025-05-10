@@ -4,6 +4,8 @@ import { ShowOrHideNavButtons } from "./BaseFunctionsAndVariables.js";
 import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
 import { HideUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
 import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVariables.js";
+import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
 
 // ---------------functions Related To Register Part---------------- //
 
@@ -25,6 +27,7 @@ document.getElementById("register-btn").addEventListener("click", async () => {
   }
 
   try {
+    ShowLoadingBar();
     // Send the FormData object to the API
     let response = await axios.post(`${BasURL}register`, formData, {
       headers: {
@@ -56,5 +59,8 @@ document.getElementById("register-btn").addEventListener("click", async () => {
     PopUpMessage("Registration failed. Please try again.", "danger");
     HideUserProfileInNavBar();
     ShowOrHideAddPostBtn();
+  }
+  finally {
+    HideLoadingBar();
   }
 });
