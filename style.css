@@ -35,3 +35,32 @@ body {
     transform: scale(1.05);
     border-radius: 20px;
 }	
+
+.circular-progress {
+    animation: rotate 2s linear infinite;
+}
+
+.progress-ring {
+    stroke-dasharray: 125.6;
+    stroke-dashoffset: 125.6;
+    animation: progress 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes progress {
+    0% {
+        stroke-dashoffset: 125.6;
+    }
+
+    50% {
+        stroke-dashoffset: 62.8;
+    }
+
+    100% {
+        stroke-dashoffset: 125.6;
+    } }

@@ -103,16 +103,26 @@ export function ShowLoadingBar() {
   loadingBar.id = "loading-bar";
   loadingBar.innerHTML = `
     <div
-      class="position-fixed top-50 start-50 translate-middle d-flex justify-content-center align-items-center"
+      class="position-fixed top-50 start-50 translate-middle"
       style="z-index: 1056; width: 100px; height: 100px;"
     >
-      <div
-        class="spinner-border text-primary"
-        role="status"
-        style="width: 80px; height: 80px; border-width: 8px;"
+      <svg
+        class="circular-progress"
+        viewBox="0 0 50 50"
+        style="width: 100%; height: 100%;"
       >
-        <span class="visually-hidden">Loading...</span>
-      </div>
+        <circle
+          class="progress-ring"
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="blue"
+          stroke-width="5"
+          stroke-dasharray="125.6"
+          stroke-dashoffset="0"
+        ></circle>
+      </svg>
     </div>
   `;
   document.body.appendChild(loadingBar);
