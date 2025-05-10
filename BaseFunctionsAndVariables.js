@@ -67,18 +67,35 @@ export function ShowOrHideNavButtons(){
     }
 }
 
-export function ShowUserProfileInNavBar(){
-    let user = JSON.parse(localStorage.getItem("user")) || {};
-    let userName = user.username || "No User Name";
-    let userImage = user.profile_image || "No Image";
+export function ShowUserProfileInNavBar() {
+  let user = JSON.parse(localStorage.getItem("user")) || {};
+  let userName = user.username || "No User Name";
 
-    let profileImg = document.getElementById("profile-image");
-    let profileName = document.getElementById("profile-name");
+  let profileImg = document.getElementById("profile-image");
+  let profileName = document.getElementById("profile-name");
 
-    profileImg.src = userImage == "No Image" ? "https://via.placeholder.com/150" : userImage;
-    profileName.innerText = userName;
+  if (profileImg) {
+    if (user.profile_image && typeof user.profile_image === "string" && user.profile_image.trim() !== "") {
+      profileImg.onload = () => {
+        console.log("Profile image loaded successfully:", user.profile_image);
+      };
 
-    document.getElementById("nav-profile").classList.remove("d-none");
+      profileImg.onerror = () => {
+        console.error("Failed to load profile image:", user.profile_image);
+        profileImg.src = "./images/MaleImage.png"; // Set default image on error
+      };
+
+      profileImg.src = user.profile_image;
+    } else {
+      console.log("No profile image found, using default image.");
+      profileImg.src = "./images/MaleImage.png";
+    }
+  } else {
+    console.error("Element with ID 'profile-image' not found!");
+  }
+  profileName.innerText = userName;
+
+  document.getElementById("nav-profile").classList.remove("d-none");
 }
 
 export function HideUserProfileInNavBar(){
