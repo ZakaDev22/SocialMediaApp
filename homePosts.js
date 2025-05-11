@@ -198,8 +198,6 @@ async function openPostDetails(postId) {
     let response = await axios.get(`${BasURL}posts/${postId}`);
     
     let post = response.data.data;
-
-    console.log(post);
     let postCard = GenerateNewCard(post);
 
     let postDetailsContainer = document.getElementById("postDetailsContainer");
@@ -208,7 +206,39 @@ async function openPostDetails(postId) {
     // Fetch and display comments
     let commentsContainer = document.getElementById("commentsContainer");
     commentsContainer.innerHTML = "";
+    if(post.comments && post.comments.length > 0) {
 
+      let commentImage = "./images/MaleImage.png"; 
+      post.comments.forEach((comment) => {
+
+        // Default image
+        if (comment.author && comment.author.profile_image 
+                           && typeof comment.author.profile_image === 'string' 
+                     && comment.author.profile_image.trim() !== "") 
+          
+          {
+            commentImage = comment.author.profile_image;
+          }
+
+        let commentElement = `
+  <div class="comment mb-3 p-2 rounded bg-light">
+    <div class="d-flex align-items-center mb-2">
+      <img
+        src="${commentImage}"
+        alt="No Image"
+        class="rounded-circle me-2 my-2"
+        style="width: 30px; height: 30px; object-fit: cover;"
+      />
+      <strong class="me-auto">${comment.author.username}</strong>
+    </div>
+    <div>
+      <p class="mb-0">${comment.body}</p>
+    </div>
+  </div>
+`;
+        commentsContainer.innerHTML += commentElement;
+      });
+    }
 
     // Show the modal
     let modal = new bootstrap.Modal(

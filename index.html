@@ -260,7 +260,7 @@ tabindex="-1"
 aria-labelledby="postDetailsModalLabel"
 aria-hidden="true"
 >
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-md">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="postDetailsModalLabel">Post Details</h5>
@@ -276,14 +276,9 @@ aria-hidden="true"
       <div id="postDetailsContainer" >
         <!-- Post details will be dynamically added here -->
       </div>
-      <hr />
-      <!-- Comments Section -->
-      <div id="commentsContainer">
-        <!-- Comments will be dynamically added here -->
-      </div>
-      <hr />
-      <!-- Add Comment Section -->
-      <div>
+      <hr>
+       <!-- Add Comment Section -->
+       <div>
         <h6>Add a Comment</h6>
         <textarea
           id="commentText"
@@ -293,6 +288,11 @@ aria-hidden="true"
         ></textarea>
         <button id="btnAddComment" class="btn btn-primary">Add Comment</button>
       </div>
+      <hr />
+      <!-- Comments Section -->
+      <div id="commentsContainer">
+        <!-- Comments will be dynamically added here -->
+      </div>     
     </div>
   </div>
 </div>
