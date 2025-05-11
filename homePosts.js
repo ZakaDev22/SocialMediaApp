@@ -243,6 +243,9 @@ async function openPostDetails(postId) {
 
        PopUpMessage("Comment added successfully!", "","alert-success");
         document.getElementById("commentText").value = ""; // Clear the textarea
+        setTimeout(async () => {
+          window.location.reload(); // Reload the page to fetch new comments
+        }, 3500); // Wait for 3.5 seconds before re-fetching
       } catch (error) {
         console.error("Error adding comment:", error);
         PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
@@ -259,7 +262,7 @@ async function openPostDetails(postId) {
 }
 
 function GenerateCommentElement(comment) {
-  
+
   let commentImage = "./images/MaleImage.png"; 
 
   if (
