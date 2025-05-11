@@ -2,6 +2,7 @@ import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
 import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { EnabelOrDesabelCommentsSection } from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
 let postLimits = 10;
@@ -20,6 +21,7 @@ async function FetchingPosts() {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
   });
+
 }
 
 async function GetPosts() {
@@ -44,26 +46,40 @@ function CreateTag(tag) {
   let tagElement = `<span class="badge bg-primary text-light m-1">${tag}</span>`;
   return tagElement;
 }
+
 function GenerateNewCard(post) {
+  let authorImage = "./images/MaleImage.png"; // Default image
+  if (post.author && post.author.profile_image && typeof post.author.profile_image === 'string' && post.author.profile_image.trim() !== "") {
+    authorImage = post.author.profile_image;
+  }
+
+  let authorUsername = post.author?.username ?? "No User Name";
+
+  let postImage = "./images/walpaper.jpg"; // Default image
+  if (post.image && typeof post.image === 'string' && post.image.trim() !== "") {
+    postImage = post.image;
+  }
+
+  let PostTags = post.tags || [];
+
   let card = `
-              <div class="card col-6 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-md-7 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
-              src="${post.author.profile_image}"
+              src="${authorImage}"
               alt = "No Image"
               class=" rounded-circle border border-primary shadow"
               width="70"
               height="70"
             />
-            <strong class="card-title">${
-              post.author.username || "No User Name"
-            }</strong>
+            <strong class="card-title">${authorUsername}</strong>
           </div>
-          <div class="card-body">
+          <div class="card-body " style="max-height: 350px;"">
             <img
-              src="${post.image}"
+              src="${postImage}"
               alt="No Image"
               class="w-100 img-fluid rounded shadow"
+              style="max-height: 200px; object-fit: cover;"  /* Added style */
             />
             <small style="color: grey" class="d-block mt-1">${
               post.created_at
@@ -89,7 +105,7 @@ function GenerateNewCard(post) {
                 />
               </svg>
               <strong> (${post.comments_count}) Comments</strong>
-              ${post.tags.forEach((tag) => CreateTag(tag)) || ""}
+              ${PostTags.forEach((tag) => CreateTag(tag)) || ""}
             </p>
           </div>
         </div>
@@ -175,9 +191,137 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     }
 });
 
+// ====== Post details Funcs =========
+
+async function openPostDetails(postId) {
+  // Fetch post details
+   try{
+    let response = await axios.get(`${BasURL}posts/${postId}`);
+    
+    let post = response.data.data;
+    let postCard = GenerateNewCard(post);
+
+    let postDetailsContainer = document.getElementById("postDetailsContainer");
+    postDetailsContainer.innerHTML = postCard;
+
+    // Fetch and display comments
+    let commentsContainer = document.getElementById("commentsContainer");
+    commentsContainer.innerHTML = "";
+    if(post.comments && post.comments.length > 0) {
+
+      post.comments.forEach((comment) => {
+
+       let commentElement = GenerateCommentElement(comment);
+        commentsContainer.innerHTML += commentElement;
+      });
+    }
+
+    // Show the modal
+    let modal = new bootstrap.Modal(
+      document.getElementById("postDetailsModal")
+    );
+    modal.show();
+
+    EnabelOrDesabelCommentsSection();
+
+    // Add event listener for adding a comment
+    document.getElementById("btnAddComment").onclick = async () => {
+      let commentText = document.getElementById("commentText").value;
+      if (commentText.trim() === "") {
+        PopUpMessage("Comment cannot be empty!", "", "alert-info");
+        return;
+      }
+
+      try {
+        ShowLoadingBar();
+        await axios.post(
+          `${BasURL}posts/${postId}/comments`,
+          { body: commentText },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        PopUpMessage("Comment added successfully!", "", "alert-success");
+        document.getElementById("commentText").value = ""; // Clear the textarea
+        setTimeout(async () => {
+          await FetchingPosts();
+          // Hide the modal
+          let modal = document.getElementById("postDetailsModal");
+          let modalInstance = bootstrap.Modal.getInstance(modal);
+          if (modalInstance) {
+            modalInstance.hide();
+          } else {
+            modal = new bootstrap.Modal(modal);
+            modal.hide();
+          }
+        }, 2000); // Wait for 3.5 seconds before re-fetching
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
+      }
+      finally{
+        HideLoadingBar();
+      }
+    };
+   }
+   catch(error){
+    console.error("Error fetching post details:", error);
+    PopUpMessage("Failed to fetch post details. Please try again.","", "alert-danger");
+  }
+}
+
+function GenerateCommentElement(comment) {
+
+  let commentImage = "./images/MaleImage.png"; 
+
+  if (
+    comment.author &&
+    comment.author.profile_image &&
+    typeof comment.author.profile_image === "string" &&
+    comment.author.profile_image.trim() !== ""
+  ) {
+    commentImage = comment.author.profile_image;
+  }
+
+  let commentElement = `
+<div id="${comment.id}" class="comment mb-3 p-2 rounded bg-light">
+<div class="d-flex align-items-center mb-2">
+<img
+src="${commentImage}"
+alt="No Image"
+class="rounded-circle me-2 my-2"
+style="width: 30px; height: 30px; object-fit: cover;"
+/>
+<strong class="me-auto">${comment.author.username}</strong>
+</div>
+<div>
+<p class="mb-0 comment-body">${comment.body}</p>
+</div>
+</div>
+`;
+
+return commentElement;
+}
+
+// ============ end ================//
 
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
+
+  // Add event listener to the postsContainer for event delegation
+  postsContainer.addEventListener("click", function (event) {
+    // Find the closest card element to the clicked target
+    let card = event.target.closest(".card");
+    if (card) {
+      // console.log("Card clicked:", card);
+      let postId = card.id;
+      // console.log("Post ID:", postId);
+      openPostDetails(postId);
+    }
+  });
 });
 
 async function FetchPostsOnLoad() {

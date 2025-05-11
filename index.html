@@ -252,6 +252,52 @@
       </div>
     </div>
 
+     <!-- Post Details Modal -->
+<div
+class="modal fade"
+id="postDetailsModal"
+tabindex="-1"
+aria-labelledby="postDetailsModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-md">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="postDetailsModalLabel">Post Details</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body ">
+      <!-- Post Details Content -->
+      <div id="postDetailsContainer" >
+        <!-- Post details will be dynamically added here -->
+      </div>
+      <hr>
+       <!-- Add Comment Section -->
+       <div id="CommentSection">
+        <h6>Add a Comment</h6>
+        <textarea
+          id="commentText"
+          class="form-control mb-2"
+          rows="3"
+          placeholder="Write your comment here..."
+        ></textarea>
+        <button id="btnAddComment" class="btn btn-primary">Add Comment</button>
+      </div>
+      <hr />
+      <!-- Comments Section -->
+      <div id="commentsContainer">
+        <!-- Comments will be dynamically added here -->
+      </div>     
+    </div>
+  </div>
+</div>
+</div>
+
     <!-- add post button -->
     <button
       class="btn position-fixed bottom-0 end-0 m-5"
@@ -442,7 +488,7 @@
 
     <script type="module" src="./BaseURLS.js"></script>
     <script type="module" src="./BaseFunctionsAndVariables.js"></script>
-    <script type="module" src="./home.js"></script>
+    <script type="module" src="./homePosts.js"></script>
     <script type="module" src="./Login.js"></script>
     <script type="module" src="./Register.js"></script>
   </body>
