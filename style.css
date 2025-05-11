@@ -65,3 +65,33 @@ body {
         stroke-dashoffset: 125.6;
     }
  }
+
+ .card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    transition: all 0.3s ease;
+ }
+    .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-15px);
+        scale: 0.9;
+        cursor: pointer;
+        background-color: aqua;
+    }
+
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 5px 5px 5px red;
+}
+
+#postDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

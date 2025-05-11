@@ -62,7 +62,7 @@ function GenerateNewCard(post) {
   let PostTags = post.tags || [];
 
   let card = `
-       <div id="${post.id}" class="card col-6 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-md-8 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
               src="${authorImage}"
@@ -78,6 +78,7 @@ function GenerateNewCard(post) {
               src="${postImage}"
               alt="No Image"
               class="w-100 img-fluid rounded shadow"
+              style="max-height: 200px; object-fit: cover;"  /* Added style */
             />
             <small style="color: grey" class="d-block mt-1">${
               post.created_at
