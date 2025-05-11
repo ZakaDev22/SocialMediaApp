@@ -208,34 +208,9 @@ async function openPostDetails(postId) {
     commentsContainer.innerHTML = "";
     if(post.comments && post.comments.length > 0) {
 
-      let commentImage = "./images/MaleImage.png"; 
       post.comments.forEach((comment) => {
 
-        // Default image
-        if (comment.author && comment.author.profile_image 
-                           && typeof comment.author.profile_image === 'string' 
-                     && comment.author.profile_image.trim() !== "") 
-          
-          {
-            commentImage = comment.author.profile_image;
-          }
-
-        let commentElement = `
-  <div class="comment mb-3 p-2 rounded bg-light">
-    <div class="d-flex align-items-center mb-2">
-      <img
-        src="${commentImage}"
-        alt="No Image"
-        class="rounded-circle me-2 my-2"
-        style="width: 30px; height: 30px; object-fit: cover;"
-      />
-      <strong class="me-auto">${comment.author.username}</strong>
-    </div>
-    <div>
-      <p class="mb-0">${comment.body}</p>
-    </div>
-  </div>
-`;
+       let commentElement = GenerateCommentElement(comment);
         commentsContainer.innerHTML += commentElement;
       });
     }
@@ -250,11 +225,12 @@ async function openPostDetails(postId) {
     document.getElementById("btnAddComment").onclick = async () => {
       let commentText = document.getElementById("commentText").value;
       if (commentText.trim() === "") {
-        alert("Comment cannot be empty!");
+        PopUpMessage("Comment cannot be empty!","","alert-danger");
         return;
       }
 
       try {
+        ShowLoadingBar();
         await axios.post(
           `${BasURL}posts/${postId}/comments`,
           { body: commentText },
@@ -265,22 +241,54 @@ async function openPostDetails(postId) {
           }
         );
 
-        // Refresh comments
-        commentsContainer.innerHTML += `
-          <div class="mb-2">
-            <strong>You</strong>: ${commentText}
-          </div>
-        `;
+       PopUpMessage("Comment added successfully!", "","alert-success");
         document.getElementById("commentText").value = ""; // Clear the textarea
       } catch (error) {
         console.error("Error adding comment:", error);
-        alert("Failed to add comment. Please try again.");
+        PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
+      }
+      finally{
+        HideLoadingBar();
       }
     };
    }
    catch(error){
     console.error("Error fetching post details:", error);
+    PopUpMessage("Failed to fetch post details. Please try again.","", "alert-danger");
   }
+}
+
+function GenerateCommentElement(comment) {
+  
+  let commentImage = "./images/MaleImage.png"; 
+
+  if (
+    comment.author &&
+    comment.author.profile_image &&
+    typeof comment.author.profile_image === "string" &&
+    comment.author.profile_image.trim() !== ""
+  ) {
+    commentImage = comment.author.profile_image;
+  }
+
+  let commentElement = `
+<div id="${comment.id}" class="comment mb-3 p-2 rounded bg-light">
+<div class="d-flex align-items-center mb-2">
+<img
+src="${commentImage}"
+alt="No Image"
+class="rounded-circle me-2 my-2"
+style="width: 30px; height: 30px; object-fit: cover;"
+/>
+<strong class="me-auto">${comment.author.username}</strong>
+</div>
+<div>
+<p class="mb-0">${comment.body}</p>
+</div>
+</div>
+`;
+
+return commentElement;
 }
 
 // ============ end ================//
