@@ -2,6 +2,7 @@ import { BasURL } from "./BaseURLS.js";
 import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
 import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { EnabelOrDesabelCommentsSection } from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
 let postLimits = 10;
@@ -221,11 +222,13 @@ async function openPostDetails(postId) {
     );
     modal.show();
 
+    EnabelOrDesabelCommentsSection();
+
     // Add event listener for adding a comment
     document.getElementById("btnAddComment").onclick = async () => {
       let commentText = document.getElementById("commentText").value;
       if (commentText.trim() === "") {
-        PopUpMessage("Comment cannot be empty!","","alert-danger");
+        PopUpMessage("Comment cannot be empty!", "", "alert-info");
         return;
       }
 
@@ -295,7 +298,7 @@ style="width: 30px; height: 30px; object-fit: cover;"
 <strong class="me-auto">${comment.author.username}</strong>
 </div>
 <div>
-<p class="mb-0">${comment.body}</p>
+<p class="mb-0 comment-body">${comment.body}</p>
 </div>
 </div>
 `;

@@ -5,7 +5,7 @@ export function PopUpMessage(message="",LogMsg="",AlertType="alert-success") {
     return;
   }
 
-  let userName = user.username || "No User Name";
+  let userName = user.username || "";
 
   let div = document.createElement("div");
   div.innerHTML = `
@@ -149,5 +149,24 @@ export function HideLoadingBar() {
   let loadingBar = document.getElementById("loading-bar");
   if (loadingBar) {
     document.body.removeChild(loadingBar);
+  }
+}
+
+export function EnabelOrDesabelCommentsSection(){
+
+  let token = localStorage.getItem("token") || "";
+  let commentText = document.getElementById("commentText");
+  let btnAddComment = document.getElementById("btnAddComment");
+
+  if(token === ""){
+    commentText.disabled = true;
+    btnAddComment.disabled = true;
+    commentText.placeholder = "Please log in to add a comment.";
+    PopUpMessage("Please log in to add a comment.", "Log In", "alert-danger");
+  }
+  else{
+    commentText.disabled = false;
+    btnAddComment.disabled = false;
+    commentText.placeholder = "Write your comment here...";
   }
 }
