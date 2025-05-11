@@ -62,7 +62,7 @@ function GenerateNewCard(post) {
   let PostTags = post.tags || [];
 
   let card = `
-       <div id="${post.id}" class="card col-md-8 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-md-7 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
               src="${authorImage}"
@@ -73,7 +73,7 @@ function GenerateNewCard(post) {
             />
             <strong class="card-title">${authorUsername}</strong>
           </div>
-          <div class="card-body">
+          <div class="card-body " style="max-height: 350px;"">
             <img
               src="${postImage}"
               alt="No Image"
@@ -241,11 +241,20 @@ async function openPostDetails(postId) {
           }
         );
 
-       PopUpMessage("Comment added successfully!", "","alert-success");
+        PopUpMessage("Comment added successfully!", "", "alert-success");
         document.getElementById("commentText").value = ""; // Clear the textarea
         setTimeout(async () => {
-          window.location.reload(); // Reload the page to fetch new comments
-        }, 3500); // Wait for 3.5 seconds before re-fetching
+          await FetchingPosts();
+          // Hide the modal
+          let modal = document.getElementById("postDetailsModal");
+          let modalInstance = bootstrap.Modal.getInstance(modal);
+          if (modalInstance) {
+            modalInstance.hide();
+          } else {
+            modal = new bootstrap.Modal(modal);
+            modal.hide();
+          }
+        }, 2000); // Wait for 3.5 seconds before re-fetching
       } catch (error) {
         console.error("Error adding comment:", error);
         PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
