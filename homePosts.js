@@ -8,6 +8,8 @@ let currentPage = 1;
 let postLimits = 10;
 let lastPage = 0;
 let isFetching = false;
+let AddEditePost = false; // false For the default = add new
+let CurrentpostId = 0; // For the default = add new
 
 async function FetchingPosts() {
   let posts = await GetPosts();
@@ -63,7 +65,7 @@ function GenerateNewCard(post) {
   let PostTags = post.tags || [];
 
   let card = `
-       <div id="${post.id}" class="card col-md-7 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
               src="${authorImage}"
@@ -73,6 +75,9 @@ function GenerateNewCard(post) {
               height="70"
             />
             <strong class="card-title">${authorUsername}</strong>
+            <button class="btnEditePost btn btn-warning float-end edite-post-btn" data-post-id="${post.id}">  <!-- Added class and data attribute -->
+              Edite
+              </button>
           </div>
           <div class="card-body " style="max-height: 350px;"">
             <img
@@ -114,6 +119,69 @@ function GenerateNewCard(post) {
   return card;
 }
 
+function ChangePostModalTitle(Titelcontent){
+  let postTitle = document.getElementById("AddPostModalTitel");
+  if (postTitle) {
+    postTitle.innerHTML = `${Titelcontent} Post`;
+  } else {
+    console.log("Post title element not found");
+  }
+
+}
+
+document.getElementById("btnAddPost").addEventListener("click", () => {
+  ChangePostModalTitle("Add New");
+  document.getElementById("post-title").value = ""; // Clear the title input
+  document.getElementById("post-body").value = ""; // Clear the body input
+  document.getElementById("post-img").disabled = false; // Enable the image input field
+  let addPostModal = new bootstrap.Modal(
+    document.getElementById("addPostModal")
+  );
+  addPostModal.toggle();
+});
+
+async function EditePost(postID){
+
+  ChangePostModalTitle("Edite");
+  document.getElementById("post-img").disabled = true; // Disable the image input field
+  let editeModal = new bootstrap.Modal(document.getElementById("addPostModal"));
+
+  try{
+    ShowLoadingBar();
+    let response = await axios.get(`${BasURL}posts/${postID}`);
+    let post = response.data.data;
+
+    // Get the current user ID from localStorage
+    let user = JSON.parse(localStorage.getItem("user")) || {};
+    let currentUserId = user.id;
+
+    // Check if the current user is the author of the post
+    if (currentUserId !== post.author.id) {
+      PopUpMessage(
+        "You are not authorized to edit this post.",
+        "",
+        "alert-warning"
+      );
+      return; // Exit the function if the user is not authorized
+    }
+
+    document.getElementById("post-title").value = post.title || "";
+    document.getElementById("post-body").value = post.body || "";
+
+    AddEditePost = true; // Set the flag to true for editing
+    CurrentpostId = postID; // Set the current post ID for editing
+
+    editeModal.toggle();
+  }
+  catch{
+    console.error("Error showing loading bar:", error);
+    PopUpMessage(`Failed to get the Post With ID ${postID}. Please try again.`,"", "alert-danger");
+  }
+  finally{
+         HideLoadingBar();
+  }
+}
+
 window.addEventListener("scroll", async () => {
   let scrollTop = window.scrollY;
   let windowHeight = window.innerHeight;
@@ -143,53 +211,69 @@ async function FetchingPaginationPosts(limit, page) {
 }
 
 document.getElementById("btnSavePost").addEventListener("click", async () => {
-    let title = document.getElementById("post-title").value;
-    let content = document.getElementById("post-body").value;
-    let image = document.getElementById("post-img").files[0]; // Get the selected file
-    
-    // Create a FormData object
-    let formData = new FormData();
-    formData.append("title", title);
-    formData.append("body", content);
-    if (image) {
-        formData.append("image", image); // Append the file only if it exists
-    }
-    
-    try {
+  try {
+    ShowLoadingBar();
 
-      ShowLoadingBar();
-      // Send the FormData object to the API
-        await axios.post(`${BasURL}posts`, formData, {
+    const title = document.getElementById("post-title").value;
+    const body = document.getElementById("post-body").value;
+    const image = document.getElementById("post-img").files[0];
+
+    if (!AddEditePost) {
+      // Create FormData for new posts (including image)
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("body", body);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      // Send the FormData object to the API (Add new post)
+      await axios.post(`${BasURL}posts`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      // Hide the modal
-      let modal = document.getElementById("addPostModal");
-      let modalInstance = bootstrap.Modal.getInstance(modal);
-      if (modalInstance) {
-        modalInstance.hide();
-      } else {
-        modal = new bootstrap.Modal(modal);
-        modal.hide();
-      }
-
       PopUpMessage("Post created successfully!", "success");
-    
-      setTimeout(async () => {
-                await FetchingPosts();
-      }, 3500); 
+    } else {
+      // Create JSON object for updating posts (excluding image)
+      const data = {
+        title: title,
+        body: body,
+      };
 
-    } catch (error) {
-        console.error("Error creating post:", error);
-        PopUpMessage("Failed to create post. Please try again." ,"danger");
+      // Send the JSON object to the API (Update existing post)
+      const res = await axios.put(`${BasURL}posts/${CurrentpostId}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      PopUpMessage("Post Updated successfully!", "success");
     }
-    finally{
-      HideLoadingBar();
-    }
+
+    hideModal("addPostModal"); // Hide the modal
+    setTimeout(async () => {
+      await FetchingPosts();
+    }, 3500);
+  } catch (error) {
+    console.error("Error creating/updating post:", error);
+    PopUpMessage("Failed to create/update post. Please try again.", "", "alert-danger");
+  } finally {
+    HideLoadingBar();
+  }
 });
+
+function hideModal(modalName) {
+  const modal = document.getElementById(modalName);
+  const modalInstance = bootstrap.Modal.getInstance(modal);
+  if (modalInstance) {
+    modalInstance.hide();
+  } else {
+    new bootstrap.Modal(modal).hide();
+  }
+}
 
 // ====== Post details Funcs =========
 
@@ -249,14 +333,7 @@ async function openPostDetails(postId) {
         setTimeout(async () => {
           await FetchingPosts();
           // Hide the modal
-          let modal = document.getElementById("postDetailsModal");
-          let modalInstance = bootstrap.Modal.getInstance(modal);
-          if (modalInstance) {
-            modalInstance.hide();
-          } else {
-            modal = new bootstrap.Modal(modal);
-            modal.hide();
-          }
+         hideModal("postDetailsModal");
         }, 2000); // Wait for 3.5 seconds before re-fetching
       } catch (error) {
         console.error("Error adding comment:", error);
@@ -306,20 +383,26 @@ style="width: 30px; height: 30px; object-fit: cover;"
 return commentElement;
 }
 
-// ============ end ================//
-
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
 
   // Add event listener to the postsContainer for event delegation
   postsContainer.addEventListener("click", function (event) {
-    // Find the closest card element to the clicked target
+    // Handle Edite button click
+    if (event.target.classList.contains("edite-post-btn")) {
+      const postId = event.target.dataset.postId;
+      EditePost(postId);
+      event.stopPropagation(); // Prevent the card click event from firing
+    }
+    else{
+     // Find the closest card element to the clicked target
     let card = event.target.closest(".card");
     if (card) {
       // console.log("Card clicked:", card);
       let postId = card.id;
       // console.log("Post ID:", postId);
       openPostDetails(postId);
+    }
     }
   });
 });
