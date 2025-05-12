@@ -63,7 +63,7 @@ function GenerateNewCard(post) {
   let PostTags = post.tags || [];
 
   let card = `
-       <div id="${post.id}" class="card col-md-7 mt-2 mb-1 shadow-lg">
+       <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
           <div class="card-header bg-success" style="color: white">
             <img
               src="${authorImage}"
@@ -73,6 +73,9 @@ function GenerateNewCard(post) {
               height="70"
             />
             <strong class="card-title">${authorUsername}</strong>
+            <button class="btn btn-warning float-end edite-post-btn" data-post-id="${post.id}">  <!-- Added class and data attribute -->
+              Edite
+              </button>
           </div>
           <div class="card-body " style="max-height: 350px;"">
             <img
@@ -112,6 +115,20 @@ function GenerateNewCard(post) {
     `;
 
   return card;
+}
+
+function EditePost(postID){
+  console.log("Edite Post ID:", postID);
+  let postTitle = document.getElementById("AddPostModalTitel");
+  if( postTitle){
+    postTitle.innerHTML = "Edite Post";
+  }
+  else{
+    console.log("Post title element not found");
+  }
+
+  let editeModal = new bootstrap.Modal(document.getElementById("addPostModal"));
+  editeModal.toggle();
 }
 
 window.addEventListener("scroll", async () => {
@@ -306,20 +323,26 @@ style="width: 30px; height: 30px; object-fit: cover;"
 return commentElement;
 }
 
-// ============ end ================//
-
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
 
   // Add event listener to the postsContainer for event delegation
   postsContainer.addEventListener("click", function (event) {
-    // Find the closest card element to the clicked target
+    // Handle Edite button click
+    if (event.target.classList.contains("edite-post-btn")) {
+      const postId = event.target.dataset.postId;
+      EditePost(postId);
+      event.stopPropagation(); // Prevent the card click event from firing
+    }
+    else{
+     // Find the closest card element to the clicked target
     let card = event.target.closest(".card");
     if (card) {
       // console.log("Card clicked:", card);
       let postId = card.id;
       // console.log("Post ID:", postId);
       openPostDetails(postId);
+    }
     }
   });
 });
