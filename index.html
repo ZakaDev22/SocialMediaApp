@@ -321,6 +321,24 @@ aria-hidden="true"
       </svg>
     </button>
 
+    <!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel">User Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="profileModalBody">
+        <!-- Profile content will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <!-- nav container -->
     <div class="container">
       <div class="d-flex justify-content-center">
@@ -374,13 +392,15 @@ aria-hidden="true"
                       d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
                     />
                   </svg>
-                  <a class="nav-link" href="#">Profile</a>
+                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">Profile</a>
                 </li>
               </ul>
               <div id="nav-btn" class="d-flex w-100 justify-content-end">
                 <div
                   id="nav-profile"
                   class="align-content-center p-1 mx-2  d-none"
+                  data-bs-toggle="modal" data-bs-target="#profileModal"
+                  style="cursor: pointer;"
                 >
                   <img
                     id="profile-image"
