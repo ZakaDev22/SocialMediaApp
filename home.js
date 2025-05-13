@@ -72,17 +72,17 @@ function GenerateNewCard(post) {
   let currentUserId = user.id;
   if (currentUserId === post.author.id) {
       EditeAndDeleteButtons = `
-       <button class="btnEditePost btn btn-warning float-end edite-post-btn mx-2" data-post-id="${post.id}">
+       <button class="btnEditePost btn btn-outline-light float-end edite-post-btn mx-2" data-post-id="${post.id}">
               Edite
      </button>
-     <button class="btnDeletePost btn btn-danger float-end delete-post-btn ms-2" data-post-id="${post.id}">
+     <button class="btnDeletePost btn btn-outline-danger float-end delete-post-btn ms-2" data-post-id="${post.id}">
               Delete
       </button>`;
   }
 
   let card = `
        <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
-          <div class="card-header bg-primary" style="color: white">
+          <div class="card-header " style="color: black; background-color:#73b8a1;">
             <img
               src="${authorImage}"
               alt = "No Image"
