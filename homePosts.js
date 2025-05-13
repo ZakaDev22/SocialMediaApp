@@ -1,9 +1,11 @@
 import { BasURL } from "./BaseURLS.js";
-import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
-import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
-import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
-import { EnabelOrDesabelCommentsSection } from "./BaseFunctionsAndVariables.js";
-import { hideModal } from "./BaseFunctionsAndVariables.js";
+import {
+  PopUpMessage,
+  ShowLoadingBar,
+  HideLoadingBar,
+  EnabelOrDesabelCommentsSection,
+  hideModal
+} from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
 let postLimits = 10;
