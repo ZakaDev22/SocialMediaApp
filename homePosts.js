@@ -65,9 +65,22 @@ function GenerateNewCard(post) {
 
   let PostTags = post.tags || [];
 
+  let EditeAndDeleteButtons = "";
+  let user = JSON.parse(localStorage.getItem("user")) || {};
+  let currentUserId = user.id;
+  if (currentUserId === post.author.id) {
+      EditeAndDeleteButtons = `
+       <button class="btnEditePost btn btn-warning float-end edite-post-btn mx-2" data-post-id="${post.id}">
+              Edite
+     </button>
+     <button class="btnDeletePost btn btn-danger float-end delete-post-btn ms-2" data-post-id="${post.id}">
+              Delete
+      </button>`;
+  }
+
   let card = `
        <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
-          <div class="card-header bg-success" style="color: white">
+          <div class="card-header bg-primary" style="color: white">
             <img
               src="${authorImage}"
               alt = "No Image"
@@ -76,9 +89,7 @@ function GenerateNewCard(post) {
               height="70"
             />
             <strong class="card-title">${authorUsername}</strong>
-            <button class="btnEditePost btn btn-warning float-end edite-post-btn" data-post-id="${post.id}">  <!-- Added class and data attribute -->
-              Edite
-              </button>
+            ${EditeAndDeleteButtons}
           </div>
           <div class="card-body " style="max-height: 350px;"">
             <img
@@ -181,7 +192,53 @@ async function EditePost(postID){
          HideLoadingBar();
   }
 }
+async function DeletePost(postID) {
 
+  
+  try {
+    ShowLoadingBar();
+
+    let response = await axios.get(`${BasURL}posts/${postID}`);
+    let post = response.data.data;
+
+    // Get the current user ID from localStorage
+    let user = JSON.parse(localStorage.getItem("user")) || {};
+    let currentUserId = user.id;
+
+    // Check if the current user is the author of the post
+    if (currentUserId !== post.author.id) {
+      PopUpMessage(
+        "You are not authorized to Delete this post.",
+        "",
+        "alert-warning"
+      );
+      return; // Exit the function if the user is not authorized
+    }
+    // Confirm with the user before deleting
+    if (!confirm("Are you sure you want to delete this post?")) {
+      return; // If the user cancels, exit the function
+    }
+
+    // Send the DELETE request to the API
+    await axios.delete(`${BasURL}posts/${postID}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    PopUpMessage("Post deleted successfully!", "success");
+
+    // Refresh the posts after successful deletion
+    setTimeout(async () => {
+      await FetchingPosts();
+    }, 2000);
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    PopUpMessage("Failed to delete post. Please try again.", "", "alert-danger");
+  } finally {
+    HideLoadingBar();
+  }
+}
 window.addEventListener("scroll", async () => {
   let scrollTop = window.scrollY;
   let windowHeight = window.innerHeight;
@@ -254,7 +311,7 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     hideModal("addPostModal"); // Hide the modal
     setTimeout(async () => {
       await FetchingPosts();
-    }, 3500);
+    }, 2000);
   } catch (error) {
     console.error("Error creating/updating post:", error);
     PopUpMessage("Failed to create/update post. Please try again.", "", "alert-danger");
@@ -382,6 +439,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (event.target.classList.contains("edite-post-btn")) {
       const postId = event.target.dataset.postId;
       EditePost(postId);
+      event.stopPropagation(); // Prevent the card click event from firing
+    }
+    // Handle Delete button click
+    else if (event.target.classList.contains("delete-post-btn")) {
+      const postId = event.target.dataset.postId;
+      DeletePost(postId);
       event.stopPropagation(); // Prevent the card click event from firing
     }
     else{
