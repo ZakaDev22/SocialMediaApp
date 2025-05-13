@@ -170,3 +170,14 @@ export function EnabelOrDesabelCommentsSection(){
     commentText.placeholder = "Write your comment here...";
   }
 }
+
+export function hideModal(modalName) {
+  
+  const modal = document.getElementById(modalName);
+  const modalInstance = bootstrap.Modal.getInstance(modal);
+  if (modalInstance) {
+    modalInstance.hide();
+  } else {
+    new bootstrap.Modal(modal).hide();
+  }
+}
