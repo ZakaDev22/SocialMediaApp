@@ -6,6 +6,7 @@ import { HideUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
 import { ShowOrHideAddPostBtn } from "./BaseFunctionsAndVariables.js";
 import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
 import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
+import { hideModal } from "./BaseFunctionsAndVariables.js";
 
 // ---------------functions Related To Register Part---------------- //
 
@@ -40,14 +41,7 @@ document.getElementById("register-btn").addEventListener("click", async () => {
     localStorage.setItem("user", JSON.stringify(response.data.user));
 
     // Hide the modal
-    let modal = document.getElementById("RegisterModal");
-    let modalInstance = bootstrap.Modal.getInstance(modal);
-    if (modalInstance) {
-      modalInstance.hide();
-    } else {
-      modal = new bootstrap.Modal(modal);
-      modal.hide();
-    }
+    hideModal("RegisterModal");
 
     // Show success message
     PopUpMessage("Registration successful!", "success");
@@ -55,8 +49,9 @@ document.getElementById("register-btn").addEventListener("click", async () => {
     ShowUserProfileInNavBar();
     ShowOrHideAddPostBtn();
   } catch (error) {
-    console.error("Error during registration:", error);
-    PopUpMessage("Registration failed. Please try again.", "danger");
+    let errorMessage = error.response?.data?.message || "An error occurred during registration.";
+    console.error("Error during registration:", errorMessage);
+    PopUpMessage(`Registration failed. ${errorMessage}`,"Please try again.", "alert-danger");
     HideUserProfileInNavBar();
     ShowOrHideAddPostBtn();
   }

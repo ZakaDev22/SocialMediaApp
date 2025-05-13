@@ -3,6 +3,7 @@ import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
 import { ShowLoadingBar } from "./BaseFunctionsAndVariables.js";
 import { HideLoadingBar } from "./BaseFunctionsAndVariables.js";
 import { EnabelOrDesabelCommentsSection } from "./BaseFunctionsAndVariables.js";
+import { hideModal } from "./BaseFunctionsAndVariables.js";
 
 let currentPage = 1;
 let postLimits = 10;
@@ -143,7 +144,6 @@ document.getElementById("btnAddPost").addEventListener("click", () => {
 async function EditePost(postID){
 
   ChangePostModalTitle("Edite");
-  document.getElementById("post-img").disabled = true; // Disable the image input field
   let editeModal = new bootstrap.Modal(document.getElementById("addPostModal"));
 
   try{
@@ -218,15 +218,15 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
     const body = document.getElementById("post-body").value;
     const image = document.getElementById("post-img").files[0];
 
-    if (!AddEditePost) {
-      // Create FormData for new posts (including image)
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("body", body);
-      if (image) {
-        formData.append("image", image);
-      }
+    // Create FormData for new posts (including image)
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("body", body);
+    if (image) {
+      formData.append("image", image);
+    }
 
+    if (!AddEditePost) {
       // Send the FormData object to the API (Add new post)
       await axios.post(`${BasURL}posts`, formData, {
         headers: {
@@ -237,19 +237,17 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
 
       PopUpMessage("Post created successfully!", "success");
     } else {
-      // Create JSON object for updating posts (excluding image)
-      const data = {
-        title: title,
-        body: body,
-      };
-
-      // Send the JSON object to the API (Update existing post)
-      const res = await axios.put(`${BasURL}posts/${CurrentpostId}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      formData.append("_method", "PUT"); // Use PUT method for updating
+      const res = await axios.post(
+        `${BasURL}posts/${CurrentpostId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       PopUpMessage("Post Updated successfully!", "success");
     }
 
@@ -265,15 +263,7 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
   }
 });
 
-function hideModal(modalName) {
-  const modal = document.getElementById(modalName);
-  const modalInstance = bootstrap.Modal.getInstance(modal);
-  if (modalInstance) {
-    modalInstance.hide();
-  } else {
-    new bootstrap.Modal(modal).hide();
-  }
-}
+
 
 // ====== Post details Funcs =========
 

@@ -1,5 +1,5 @@
 import { BasURL } from "./BaseURLS.js";
-import { PopUpMessage } from "./BaseFunctionsAndVariables.js";
+import { hideModal, PopUpMessage } from "./BaseFunctionsAndVariables.js";
 import { logoutBtn } from "./BaseFunctionsAndVariables.js";
 import {ShowOrHideNavButtons} from "./BaseFunctionsAndVariables.js";
 import { ShowUserProfileInNavBar } from "./BaseFunctionsAndVariables.js";
@@ -25,15 +25,8 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     let response = await axios.post(`${BasURL}login`, loginData);
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.user));
-
-    let modal = document.getElementById("loginModal");
-    let modalInstance = bootstrap.Modal.getInstance(modal);
-    if (modalInstance) {
-      modalInstance.hide();
-    } else {
-      modal = new bootstrap.Modal(modal);
-      modal.hide();
-    }
+   
+    hideModal("loginModal");
     
     ShowOrHideNavButtons();
     ShowUserProfileInNavBar();
