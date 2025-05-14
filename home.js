@@ -53,14 +53,14 @@ function CreateTag(tag) {
 }
 
 function GenerateNewCard(post) {
-  let authorImage = "./images/MaleImage.png"; // Default image
+  let authorImage = "./Images/MaleImage.png"; // Default image
   if (post.author && post.author.profile_image && typeof post.author.profile_image === 'string' && post.author.profile_image.trim() !== "") {
     authorImage = post.author.profile_image;
   }
 
   let authorUsername = post.author?.username ?? "No User Name";
 
-  let postImage = "./images/walpaper.jpg"; // Default image
+  let postImage = "./Images/walpaper.jpg"; // Default image
   if (post.image && typeof post.image === 'string' && post.image.trim() !== "") {
     postImage = post.image;
   }
@@ -401,7 +401,7 @@ async function openPostDetails(postId) {
 
 function GenerateCommentElement(comment) {
 
-  let commentImage = "./images/MaleImage.png"; 
+  let commentImage = "./Images/MaleImage.png"; 
 
   if (
     comment.author &&
