@@ -82,13 +82,13 @@ export function ShowUserProfileInNavBar() {
 
       profileImg.onerror = () => {
         console.error("Failed to load profile image:", user.profile_image);
-        profileImg.src = "./images/MaleImage.png"; // Set default image on error
+        profileImg.src = "./Images/MaleImage.png"; // Set default image on error
       };
 
       profileImg.src = user.profile_image;
     } else {
       console.log("No profile image found, using default image.");
-      profileImg.src = "./images/MaleImage.png";
+      profileImg.src = "./Images/MaleImage.png";
     }
   } else {
     console.error("Element with ID 'profile-image' not found!");
