@@ -7,7 +7,7 @@ This project was developed as part of my advanced JavaScript training. It consum
 
 ## 🔗 Live Demo / Repository
 
-> [👉 Click here to view the project on GitHub]([https://github.com/YourUsername/SocialMediaApp](https://zakadev22.github.io/SocialMediaApp/))
+> [👉 Click here to view the project on GitHub](https://zakadev22.github.io/SocialMediaApp/)
 
 ---
 
