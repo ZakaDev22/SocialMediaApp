@@ -9,6 +9,8 @@ import {
   ShowLoadingBar,
   HideLoadingBar,
 } from "./BaseFunctionsAndVariables.js";
+import { FetchingPosts } from "./home.js";
+
 
 // ---------------functions Related To Register Part---------------- //
 
@@ -50,6 +52,7 @@ document.getElementById("register-btn").addEventListener("click", async () => {
     ShowOrHideNavButtons();
     ShowUserProfileInNavBar();
     ShowOrHideAddPostBtn();
+    FetchingPosts(); // Fetch posts after successful registration
   } catch (error) {
     let errorMessage = error.response?.data?.message || "An error occurred during registration.";
     console.error("Error during registration:", errorMessage);

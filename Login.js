@@ -8,6 +8,7 @@ import {
 } 
 from "./BaseFunctionsAndVariables.js";
 
+import {FetchingPosts} from "./home.js";
 
 
 ShowOrHideNavButtons(); // call the function to show or hide the nav buttons based on the token
@@ -37,6 +38,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
       "LogOut",
       "alert-success"
     );
+    FetchingPosts();
   } catch (error) {
     console.log(error);
     PopUpMessage("Error during login: see the full message on the cosole","","alert-danger");
@@ -55,5 +57,6 @@ logoutBtn.addEventListener("click", () => {
     HideUserProfileInNavBar();
     ShowOrHideAddPostBtn();
   PopUpMessage("Success, You Have LogOut From The System", "Log In", "alert-danger");
+  FetchingPosts();
 });
 

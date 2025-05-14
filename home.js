@@ -14,7 +14,7 @@ let isFetching = false;
 let AddEditePost = false; // false For the default = add new
 let CurrentpostId = 0; // For the default = add new
 
-async function FetchingPosts() {
+export async function FetchingPosts() {
   let posts = await GetPosts();
   if (!posts || !posts.data) {
     console.error("No data received from the API.");
