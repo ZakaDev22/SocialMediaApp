@@ -252,51 +252,53 @@
       </div>
     </div>
 
-     <!-- Post Details Modal -->
-<div
-class="modal fade"
-id="postDetailsModal"
-tabindex="-1"
-aria-labelledby="postDetailsModalLabel"
-aria-hidden="true"
->
-<div class="modal-dialog modal-md">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="postDetailsModalLabel">Post Details</h5>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
-    </div>
-    <div class="modal-body ">
-      <!-- Post Details Content -->
-      <div id="postDetailsContainer" >
-        <!-- Post details will be dynamically added here -->
+    <!-- Post Details Modal -->
+    <div
+      class="modal fade"
+      id="postDetailsModal"
+      tabindex="-1"
+      aria-labelledby="postDetailsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="postDetailsModalLabel">Post Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Post Details Content -->
+            <div id="postDetailsContainer">
+              <!-- Post details will be dynamically added here -->
+            </div>
+            <hr />
+            <!-- Add Comment Section -->
+            <div id="CommentSection">
+              <h6>Add a Comment</h6>
+              <textarea
+                id="commentText"
+                class="form-control mb-2"
+                rows="3"
+                placeholder="Write your comment here..."
+              ></textarea>
+              <button id="btnAddComment" class="btn btn-primary">
+                Add Comment
+              </button>
+            </div>
+            <hr />
+            <!-- Comments Section -->
+            <div id="commentsContainer">
+              <!-- Comments will be dynamically added here -->
+            </div>
+          </div>
+        </div>
       </div>
-      <hr>
-       <!-- Add Comment Section -->
-       <div id="CommentSection">
-        <h6>Add a Comment</h6>
-        <textarea
-          id="commentText"
-          class="form-control mb-2"
-          rows="3"
-          placeholder="Write your comment here..."
-        ></textarea>
-        <button id="btnAddComment" class="btn btn-primary">Add Comment</button>
-      </div>
-      <hr />
-      <!-- Comments Section -->
-      <div id="commentsContainer">
-        <!-- Comments will be dynamically added here -->
-      </div>     
     </div>
-  </div>
-</div>
-</div>
 
     <!-- add post button -->
     <button
@@ -321,6 +323,7 @@ aria-hidden="true"
       </svg>
     </button>
 
+
     <!-- nav container -->
     <div class="container">
       <div class="d-flex justify-content-center">
@@ -328,7 +331,7 @@ aria-hidden="true"
           class="navbar navbar-expand-lg bg-body-tertiary rounded-3 shadow-lg col-9"
         >
           <div class="container-fluid">
-            <a class="navbar-brand" href="#">HelloMe</a>
+            <a class="navbar-brand" href="index.html">HelloMe</a>
             <button
               class="navbar-toggler"
               type="button"
@@ -355,32 +358,18 @@ aria-hidden="true"
                       d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"
                     />
                   </svg>
-                  <a class="nav-link active" aria-current="page" href="#"
+                  <a class="nav-link active" aria-current="page" href="index.html"
                     >Home</a
                   >
-                </li>
-                <li class="nav-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-person-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                    <path
-                      fill-rule="evenodd"
-                      d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-                    />
-                  </svg>
-                  <a class="nav-link" href="#">Profile</a>
                 </li>
               </ul>
               <div id="nav-btn" class="d-flex w-100 justify-content-end">
                 <div
                   id="nav-profile"
-                  class="align-content-center p-1 mx-2  d-none"
+                  class="align-content-center p-1 mx-2 d-none"
+                  data-bs-toggle="modal"
+                  data-bs-target="#profileModal"
+                  style="cursor: pointer"
                 >
                   <img
                     id="profile-image"
@@ -486,7 +475,7 @@ aria-hidden="true"
 
     <script type="module" src="./BaseURLS.js"></script>
     <script type="module" src="./BaseFunctionsAndVariables.js"></script>
-    <script type="module" src="./homePosts.js"></script>
+    <script type="module" src="./home.js"></script>
     <script type="module" src="./Login.js"></script>
     <script type="module" src="./Register.js"></script>
   </body>
