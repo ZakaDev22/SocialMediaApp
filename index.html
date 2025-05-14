@@ -302,9 +302,10 @@
 
     <!-- add post button -->
     <button
-      class="btn position-fixed bottom-0 end-0 m-5"
+      class="btn"
       id="btnAddPost"
       type="button"
+      style="z-index: 9000; position: fixed; bottom: 50px; right: 5px;"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -323,6 +324,12 @@
       </svg>
     </button>
 
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" class="btn btn-primary rounded-circle" style="z-index: 9000;position: fixed; bottom: 150px; right: 40px; display: none;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/>
+  </svg>
+</button>
 
     <!-- nav container -->
     <div class="container">
@@ -473,6 +480,31 @@
       </div>
     </div>
 
+    <!-- Left Sidebar -->
+    <div class="sidebar left-sidebar fixed-top h-100 bg-light p-4">
+      <h5>How to Use</h5>
+      <div class="tutorial-step">
+        <img src="./images/login.png" alt="Login" class="img-fluid mb-2" />
+        <p>1. <strong>Login:</strong> Click the "Login" button to access your account.</p>
+      </div>
+      <div class="tutorial-step">
+        <img src="./images/register.png" alt="Register" class="img-fluid mb-2" />
+        <p>2. <strong>Register:</strong> New? Create an account using the "Register" button.</p>
+      </div>
+      <div class="tutorial-step">
+        <img src="./images/addpost.png" alt="Add Post" class="img-fluid mb-2" />
+        <p>3. <strong>Add Post:</strong> Share your thoughts by clicking the "+" button.</p>
+      </div>
+      <div class="tutorial-step">
+        <img src="./images/addcomment.png" alt="Add Comment" class="img-fluid mb-2" />
+        <p>4. <strong>Add Comment:</strong> Share your thoughts by clicking the "+" button.</p>
+      </div>
+      <div class="tutorial-step">
+        <img src="./images/carddetails.png" alt="Card Details" class="img-fluid mb-2" />
+        <p>5. <strong>Card Details:</strong> Share your thoughts by clicking the "+" button.</p>
+      </div>
+    </div>
+    
     <script type="module" src="./BaseURLS.js"></script>
     <script type="module" src="./BaseFunctionsAndVariables.js"></script>
     <script type="module" src="./home.js"></script>

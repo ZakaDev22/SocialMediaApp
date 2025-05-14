@@ -460,6 +460,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     }
   });
+
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+  // Show or hide the button based on scroll position
+  window.addEventListener("scroll", () => {
+    if (
+      document.body.scrollTop > 20 ||
+      document.documentElement.scrollTop > 20
+    ) {
+      scrollToTopBtn.style.display = "block";
+    } else {
+      scrollToTopBtn.style.display = "none";
+    }
+  });
+
+  // Scroll to the top when the button is clicked
+  scrollToTopBtn.addEventListener("click", () => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  });
 });
 
 async function FetchPostsOnLoad() {
