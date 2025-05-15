@@ -108,23 +108,18 @@ body {
 
 #scrollToTopBtn:hover {
     opacity: 1;
-    /* Make it fully opaque on hover */ }
+ }
 
 
-        /* filepath: c:\MyWebProjectsFiles\SocialMediaApp\style.css */
         .left-sidebar {
             left: 0;
-            width: 250px;
-            /* Adjust as needed */
+            width: 200px;
             overflow-y: auto;
-            /* Add scroll if content overflows */
             padding-bottom: 20px;
-            /* Add some padding at the bottom */
         }
     
         .container {
-            margin-left: 250px;
-            /* Adjust to match left sidebar width */
+            margin-left: 100px;
         }
     
         .tutorial-step {
@@ -143,3 +138,13 @@ body {
         .tutorial-step p {
             font-size: 0.9em;
             color: #555; }
+
+@media (max-width: 768px) {
+    .left-sidebar {
+       
+        display: none;
+    }
+    
+   
+    
+}
