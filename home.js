@@ -82,15 +82,15 @@ function GenerateNewCard(post) {
 
   let card = `
        <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
-          <div class="card-header " style="color: black; background-color:#73b8a1;">
-            <img
-              src="${authorImage}"
-              alt = "No Image"
-              class=" rounded-circle border border-primary shadow"
-              width="70"
-              height="70"
-            />
-            <strong class="card-title">${authorUsername}</strong>
+          <div id="author-info" user-prifile-click data-user-id="${post.author.id} class="card-header " style="color: black; background-color:#73b8a1;">
+              <img
+                src="${authorImage}"
+                alt = "No Image"
+                class=" rounded-circle border border-primary shadow"
+                width="70"
+                height="70"
+              />
+              <strong class="card-title">${authorUsername}</strong>
             ${EditeAndDeleteButtons}
           </div>
           <div class="card-body " style="max-height: 350px;"">
@@ -432,8 +432,44 @@ style="width: 30px; height: 30px; object-fit: cover;"
 return commentElement;
 }
 
+async function openUserProfileModal(userId) {
+  try {
+    ShowLoadingBar();
+    const response = await axios.get(`${BasURL}users/${userId}`);
+    const user = response.data.data;
+
+    // Populate the modal with user data
+    const userProfileModalBody = document.getElementById(
+      "userProfileModalBody"
+    );
+    userProfileModalBody.innerHTML = `
+      <h3>${user.username}</h3>
+      <p>Email: ${user.email}</p>
+      <img src="${user.profile_image}" alt="Profile Image" style="width: 100px; height: 100px;">
+      <!-- Add more user information here -->
+    `;
+
+    // Show the modal
+    const userProfileModal = new bootstrap.Modal(
+      document.getElementById("userProfileModal")
+    );
+    userProfileModal.show();
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    PopUpMessage(
+      "Failed to load user profile. Please try again.",
+      "",
+      "alert-danger"
+    );
+  } finally {
+    HideLoadingBar();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
+
+  const postsContainer = document.getElementById("postsContainer");
 
   // Add event listener to the postsContainer for event delegation
   postsContainer.addEventListener("click", function (event) {
@@ -448,16 +484,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       const postId = event.target.dataset.postId;
       DeletePost(postId);
       event.stopPropagation(); // Prevent the card click event from firing
-    }
-    else{
-     // Find the closest card element to the clicked target
-    let card = event.target.closest(".card");
-    if (card) {
-      // console.log("Card clicked:", card);
-      let postId = card.id;
-      // console.log("Post ID:", postId);
-      openPostDetails(postId);
-    }
+    } 
+    else if (event.target.closest("#author-info")) {
+      const authorInfoSpan = event.target.closest("#author-info");
+      const userId = authorInfoSpan.dataset.userId;
+      openUserProfileModal(userId);
+      event.stopPropagation(); // Prevent the card click event from firing
+    } else {
+      // Find the closest card element to the clicked target
+      let card = event.target.closest(".card");
+      if (card) {
+        // console.log("Card clicked:", card);
+        let postId = card.id;
+        // console.log("Post ID:", postId);
+        openPostDetails(postId);
+      }
     }
   });
 
