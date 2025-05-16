@@ -111,33 +111,34 @@ body {
  }
 
 
-        .left-sidebar {
-            left: 0;
-            width: 200px;
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
+ .left-sidebar {
+     left: 0;
+     width: 200px;
+     overflow-y: auto;
+     padding-bottom: 20px;
+     transition: all 0.3s ease;
+ }
     
-        .container {
-            margin-left: 100px;
-        }
+ .container {
+     margin-left: 100px;
+ }
     
-        .tutorial-step {
-            margin-bottom: 15px;
-        }
+ .tutorial-step {
+     margin-bottom: 15px;
+ }
     
-        .tutorial-step img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            /* Optional: Add a border to the images */
-            border-radius: 4px;
-            /* Optional: Add a border radius to the images */
-        }
+ .tutorial-step img {
+     max-width: 100%;
+     height: auto;
+     border: 1px solid #ddd;
+     /* Optional: Add a border to the images */
+     border-radius: 4px;
+     /* Optional: Add a border radius to the images */
+ }
     
-        .tutorial-step p {
-            font-size: 0.9em;
-            color: #555; }
+ .tutorial-step p {
+     font-size: 0.9em;
+     color: #555; }
 
 @media (max-width: 768px) {
     .left-sidebar {
@@ -148,3 +149,20 @@ body {
    
     
 }
+
+
+#left-sidebar.collapsed {
+    transform: translateX(-250px);
+}
+
+#sidebarContent {
+    overflow: hidden;
+}
+
+.container {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.container.sidebar-open {
+    margin-left: 250px;
+ }

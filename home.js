@@ -529,6 +529,13 @@ async function openUserProfileModal(userId) {
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
 
+  const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+  const leftSidebar = document.getElementById("left-sidebar");
+
+  toggleSidebarBtn.addEventListener("click", () => {
+    leftSidebar.classList.toggle("collapsed");
+  });
+
   const postsContainer = document.getElementById("postsContainer");
 
   // Add event listener to the postsContainer for event delegation
