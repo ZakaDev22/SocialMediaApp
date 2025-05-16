@@ -82,15 +82,15 @@ function GenerateNewCard(post) {
 
   let card = `
        <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
-          <div class="card-header " style="color: black; background-color:#73b8a1;">
-            <img
-              src="${authorImage}"
-              alt = "No Image"
-              class=" rounded-circle border border-primary shadow"
-              width="70"
-              height="70"
-            />
-            <strong class="card-title">${authorUsername}</strong>
+          <div id="author-info"  data-user-id="${post.author.id}" class="card-header" style="color: black; background-color:#73b8a1;">
+              <img
+                src="${authorImage}"
+                alt = "No Image"
+                class=" rounded-circle border border-primary shadow"
+                width="70"
+                height="70"
+              />
+              <strong class="card-title">${authorUsername}</strong>
             ${EditeAndDeleteButtons}
           </div>
           <div class="card-body " style="max-height: 350px;"">
@@ -186,8 +186,7 @@ async function EditePost(postID){
 
     editeModal.toggle();
   }
-  catch{
-    console.error("Error showing loading bar:", error);
+  catch(error){
     PopUpMessage(`Failed to get the Post With ID ${postID}. Please try again.`,"", "alert-danger");
   }
   finally{
@@ -236,7 +235,8 @@ async function DeletePost(postID) {
     }, 2000);
   } catch (error) {
     console.error("Error deleting post:", error);
-    PopUpMessage("Failed to delete post. Please try again.", "", "alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
@@ -315,8 +315,8 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
       await FetchingPosts();
     }, 2000);
   } catch (error) {
-    console.error("Error creating/updating post:", error);
-    PopUpMessage("Failed to create/update post. Please try again.", "", "alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
@@ -385,8 +385,10 @@ async function openPostDetails(postId) {
          hideModal("postDetailsModal");
         }, 2000); // Wait for 3.5 seconds before re-fetching
       } catch (error) {
-        console.error("Error adding comment:", error);
-        PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
+        let erroMessage =
+          error.response?.data?.message || "Failed to delete post.";
+
+        PopUpMessage(erroMessage,"", "alert-danger");
       }
       finally{
         HideLoadingBar();
@@ -432,8 +434,111 @@ style="width: 30px; height: 30px; object-fit: cover;"
 return commentElement;
 }
 
+document.getElementById("curent-user-li").addEventListener("click", () => {
+
+    ShowCurrentUserDetails();
+});
+function ShowCurrentUserDetails()
+{
+  let user = JSON.parse(localStorage.getItem("user")) || {};
+  let userImage = "./Images/MaleImage.png"; // Default image
+  if (
+    user &&
+    user.profile_image &&
+    typeof user.profile_image === "string" &&
+    user.profile_image.trim() !== ""
+  ) {
+    userImage = user.profile_image;
+  }
+
+  // Populate the modal with user data
+  const userProfileModalBody = document.getElementById("userProfileModalBody");
+  userProfileModalBody.innerHTML = GenerateUserDetails(user);
+
+
+  // Show the modal
+  const userProfileModal = new bootstrap.Modal(
+    document.getElementById("userProfileModal")
+  );
+  userProfileModal.show();
+
+}
+
+function GenerateUserDetails(user){
+
+  let authorImage = "./Images/MaleImage.png"; 
+  if (
+    user &&
+    user.profile_image &&
+    typeof user.profile_image === "string" &&
+    user.profile_image.trim() !== ""
+  ) 
+  {
+    authorImage = user.profile_image;
+  }
+
+  let content = `
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="${authorImage}" alt="Profile Image" class="img-fluid rounded-circle shadow mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+          <div class="col-md-8">
+            <h3 class="mb-2">${user.username || ""}</h3>
+            <p class="text-muted">${user.name || ""}</p>
+            <p><i class="bi bi-envelope me-2"></i>${user.email || ""}</p>
+            <p><i class="bi bi-chat-square-dots me-2"></i>Comments: ${user.comments_count || ""}</p>
+            <p><i class="bi bi-sticky me-2"></i>Posts: ${user.posts_count || ""}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+  return content;
+}
+async function openUserProfileModal(userId) {
+  try {
+    ShowLoadingBar();
+    const response = await axios.get(`${BasURL}users/${userId}`);
+    const user = response.data.data;
+
+   
+    // Populate the modal with user data
+    const userProfileModalBody = document.getElementById("userProfileModalBody");
+    userProfileModalBody.innerHTML = GenerateUserDetails(user);
+
+    // Store the currently focused element
+    const triggerElement = document.activeElement;
+
+    // Show the modal
+    const userProfileModal = new bootstrap.Modal(document.getElementById("userProfileModal"));
+    userProfileModal.show();
+
+    // Add an event listener to return focus when the modal is hidden
+    document.getElementById('userProfileModal').addEventListener('hidden.bs.modal', function () {
+      if (triggerElement) {
+        triggerElement.focus();
+      }
+    });
+  } catch (error) {
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
+  } finally {
+    HideLoadingBar();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   FetchPostsOnLoad();
+
+  const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+  const leftSidebar = document.getElementById("left-sidebar");
+
+  toggleSidebarBtn.addEventListener("click", () => {
+    leftSidebar.classList.toggle("collapsed");
+  });
+
+  const postsContainer = document.getElementById("postsContainer");
 
   // Add event listener to the postsContainer for event delegation
   postsContainer.addEventListener("click", function (event) {
@@ -448,16 +553,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       const postId = event.target.dataset.postId;
       DeletePost(postId);
       event.stopPropagation(); // Prevent the card click event from firing
-    }
-    else{
-     // Find the closest card element to the clicked target
-    let card = event.target.closest(".card");
-    if (card) {
-      // console.log("Card clicked:", card);
-      let postId = card.id;
-      // console.log("Post ID:", postId);
-      openPostDetails(postId);
-    }
+    } 
+    else if (event.target.closest("#author-info")) {
+      const authorInfoSpan = event.target.closest("#author-info");
+      const userId = authorInfoSpan.dataset.userId;
+      openUserProfileModal(userId);
+      event.stopPropagation(); // Prevent the card click event from firing
+    } else {
+      // Find the closest card element to the clicked target
+      let card = event.target.closest(".card");
+      if (card) {
+        // console.log("Card clicked:", card);
+        let postId = card.id;
+        // console.log("Post ID:", postId);
+        openPostDetails(postId);
+      }
     }
   });
 

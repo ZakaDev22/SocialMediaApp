@@ -57,12 +57,15 @@ export function ShowOrHideNavButtons(){
         loginBtn.classList.remove("visually-hidden");
         registerBtn.classList.remove("visually-hidden");
         logoutBtn.classList.add("visually-hidden");
+        document.getElementById("curent-user-li").classList.add("d-none");
         HideUserProfileInNavBar();
     }
     else{
         loginBtn.classList.add("visually-hidden");
         registerBtn.classList.add("visually-hidden");
         logoutBtn.classList.remove("visually-hidden");
+        document.getElementById("curent-user-li").classList.remove("d-none");
+
         ShowUserProfileInNavBar();
     }
 }

@@ -41,7 +41,9 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     FetchingPosts();
   } catch (error) {
     console.log(error);
-    PopUpMessage("Error during login: see the full message on the cosole","","alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+
+    PopUpMessage(erroMessage, "Log In", "alert-danger");
   }
   finally {
     HideLoadingBar();
