@@ -82,7 +82,7 @@ function GenerateNewCard(post) {
 
   let card = `
        <div id="${post.id}" class="card col-md-9 mt-2 mb-1 shadow-lg">
-          <div id="author-info" user-prifile-click data-user-id="${post.author.id} class="card-header " style="color: black; background-color:#73b8a1;">
+          <div id="author-info"  data-user-id="${post.author.id}" class="card-header" style="color: black; background-color:#73b8a1;">
               <img
                 src="${authorImage}"
                 alt = "No Image"
@@ -432,35 +432,95 @@ style="width: 30px; height: 30px; object-fit: cover;"
 return commentElement;
 }
 
+document.getElementById("curent-user-li").addEventListener("click", () => {
+
+    ShowCurrentUserDetails();
+});
+function ShowCurrentUserDetails()
+{
+  let user = JSON.parse(localStorage.getItem("user")) || {};
+  let userImage = "./Images/MaleImage.png"; // Default image
+  if (
+    user &&
+    user.profile_image &&
+    typeof user.profile_image === "string" &&
+    user.profile_image.trim() !== ""
+  ) {
+    userImage = user.profile_image;
+  }
+
+  // Populate the modal with user data
+  const userProfileModalBody = document.getElementById("userProfileModalBody");
+  userProfileModalBody.innerHTML = GenerateUserDetails(user);
+
+
+  // Show the modal
+  const userProfileModal = new bootstrap.Modal(
+    document.getElementById("userProfileModal")
+  );
+  userProfileModal.show();
+
+}
+
+function GenerateUserDetails(user){
+
+  let authorImage = "./Images/MaleImage.png"; 
+  if (
+    user &&
+    user.profile_image &&
+    typeof user.profile_image === "string" &&
+    user.profile_image.trim() !== ""
+  ) 
+  {
+    authorImage = user.profile_image;
+  }
+
+  let content = `
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="${authorImage}" alt="Profile Image" class="img-fluid rounded-circle shadow mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+          <div class="col-md-8">
+            <h3 class="mb-2">${user.username || ""}</h3>
+            <p class="text-muted">${user.name || ""}</p>
+            <p><i class="bi bi-envelope me-2"></i>${user.email || ""}</p>
+            <p><i class="bi bi-chat-square-dots me-2"></i>Comments: ${user.comments_count || ""}</p>
+            <p><i class="bi bi-sticky me-2"></i>Posts: ${user.posts_count || ""}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+  return content;
+}
 async function openUserProfileModal(userId) {
   try {
     ShowLoadingBar();
     const response = await axios.get(`${BasURL}users/${userId}`);
     const user = response.data.data;
 
+   
     // Populate the modal with user data
-    const userProfileModalBody = document.getElementById(
-      "userProfileModalBody"
-    );
-    userProfileModalBody.innerHTML = `
-      <h3>${user.username}</h3>
-      <p>Email: ${user.email}</p>
-      <img src="${user.profile_image}" alt="Profile Image" style="width: 100px; height: 100px;">
-      <!-- Add more user information here -->
-    `;
+    const userProfileModalBody = document.getElementById("userProfileModalBody");
+    userProfileModalBody.innerHTML = GenerateUserDetails(user);
+
+    // Store the currently focused element
+    const triggerElement = document.activeElement;
 
     // Show the modal
-    const userProfileModal = new bootstrap.Modal(
-      document.getElementById("userProfileModal")
-    );
+    const userProfileModal = new bootstrap.Modal(document.getElementById("userProfileModal"));
     userProfileModal.show();
+
+    // Add an event listener to return focus when the modal is hidden
+    document.getElementById('userProfileModal').addEventListener('hidden.bs.modal', function () {
+      if (triggerElement) {
+        triggerElement.focus();
+      }
+    });
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    PopUpMessage(
-      "Failed to load user profile. Please try again.",
-      "",
-      "alert-danger"
-    );
+    PopUpMessage("Failed to load user profile. Please try again.", "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
