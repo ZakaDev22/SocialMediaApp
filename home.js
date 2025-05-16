@@ -186,8 +186,7 @@ async function EditePost(postID){
 
     editeModal.toggle();
   }
-  catch{
-    console.error("Error showing loading bar:", error);
+  catch(error){
     PopUpMessage(`Failed to get the Post With ID ${postID}. Please try again.`,"", "alert-danger");
   }
   finally{
@@ -236,7 +235,8 @@ async function DeletePost(postID) {
     }, 2000);
   } catch (error) {
     console.error("Error deleting post:", error);
-    PopUpMessage("Failed to delete post. Please try again.", "", "alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
@@ -315,8 +315,8 @@ document.getElementById("btnSavePost").addEventListener("click", async () => {
       await FetchingPosts();
     }, 2000);
   } catch (error) {
-    console.error("Error creating/updating post:", error);
-    PopUpMessage("Failed to create/update post. Please try again.", "", "alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
@@ -385,8 +385,10 @@ async function openPostDetails(postId) {
          hideModal("postDetailsModal");
         }, 2000); // Wait for 3.5 seconds before re-fetching
       } catch (error) {
-        console.error("Error adding comment:", error);
-        PopUpMessage("Failed to add comment. Please try again.","", "alert-danger");
+        let erroMessage =
+          error.response?.data?.message || "Failed to delete post.";
+
+        PopUpMessage(erroMessage,"", "alert-danger");
       }
       finally{
         HideLoadingBar();
@@ -519,8 +521,8 @@ async function openUserProfileModal(userId) {
       }
     });
   } catch (error) {
-    console.error("Error fetching user profile:", error);
-    PopUpMessage("Failed to load user profile. Please try again.", "", "alert-danger");
+    let erroMessage = error.response?.data?.message || "Failed to delete post.";
+    PopUpMessage(erroMessage, "", "alert-danger");
   } finally {
     HideLoadingBar();
   }
