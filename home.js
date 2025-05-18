@@ -22,11 +22,16 @@ export async function FetchingPosts() {
   }
   let postsContainer = document.getElementById("postsContainer");
   postsContainer.innerHTML = ""; // Clear previous posts
-  posts.data.forEach((post) => {
+
+  // Filter out posts from the banned user (2183) and posts with name "sexy"
+  let validPosts = posts.data.filter(
+    (post) => post.author.id !== 2183 && post.author.name !== "sexy"
+  );
+
+  for (let post of validPosts) {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
-  });
-
+  }
 }
 
 async function GetPosts() {
@@ -255,18 +260,22 @@ window.addEventListener("scroll", async () => {
 });
 
 async function FetchingPaginationPosts(limit, page) {
-
   let posts = await GetPosts(limit, page);
   if (!posts || !posts.data) {
     console.error("No data received from the API.");
-    return; 
+    return;
   }
 
   let postsContainer = document.getElementById("postsContainer");
-  posts.data.forEach((post) => {
+  // Filter out posts from the banned user (2183) and posts with name "sexy"
+  let validPosts = posts.data.filter(
+    (post) => post.author.id !== 2183 && post.author.name !== "sexy"
+  );
+
+  for (let post of validPosts) {
     let card = GenerateNewCard(post);
     postsContainer.innerHTML += card;
-  });
+  }
 }
 
 document.getElementById("btnSavePost").addEventListener("click", async () => {

@@ -49,6 +49,28 @@ export let loginBtn = document.getElementById("loginbtn");
 export let registerBtn = document.getElementById("btnRegister");
 export let logoutBtn = document.getElementById("btnLogout");
 
+BanCurrentUser();
+function BanCurrentUser(){
+    let user = JSON.parse(localStorage.getItem("user")) || {};
+    let userName = user.username || "No User Name";
+    let userId = user.id || "No User ID";
+
+   if (userName === "sexy" || userId === 2183) {
+    
+    logoutBtn.classList.add("d-none");
+    loginBtn.classList.add("d-none");
+    registerBtn.classList.add("d-none");
+    document.getElementById("btnAddPost").classList.add("d-none");
+   }
+   else{
+    logoutBtn.classList.remove("d-none");
+    loginBtn.classList.remove("d-none");
+    registerBtn.classList.remove("d-none");
+    document.getElementById("btnAddPost").classList.remove("d-none");
+   }
+
+}
+
 export function ShowOrHideNavButtons(){
 
     let token = localStorage.getItem("token") || "";
